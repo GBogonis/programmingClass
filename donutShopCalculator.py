@@ -2,7 +2,6 @@
 costOfDozen = 4.99
 costOfSingle = costOfDozen/12
 costOfCoffee = 2.99
-cost = 0
 
 #calculating how many donuts and coffees the user wants and how much it will cost
 
@@ -19,7 +18,7 @@ prompt2 = 'and would you like any coffee?\n'
 coffeeWanted = input(prompt2)
 
 cost = cost + round(int(coffeeWanted)*costOfCoffee,2)
-print("Ok, Your total cost is", cost,"$")
+print("Ok, Your total cost is", round(cost,2),"$")
 
 #calculating how much money is owed compaired to how much money is given
 
