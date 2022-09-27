@@ -10,6 +10,7 @@ donutsWanted = input(prompt)
 
 if(int(donutsWanted) > 12):
     print("only 12 in stock, sorry")
+    cost = 0
 else:
     cost = round(int(donutsWanted)*costOfSingle,2)
     #print("that will cost", cost, "$")
