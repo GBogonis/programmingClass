@@ -1,22 +1,22 @@
 #start
 
-#calculation function to convert and return all the types of information based on the parameters
+#calculation function to convert and return all the types of information based on the function's arguments
 def calculateData(dataType, data):
     if(dataType == 1):
         #calculate temperature
-        return round((data-32)*(5/9),0)
+        return str(round((data-32)*(5/9),0))
     if(dataType == 2):
         #calculate wind speeds
-        return round(data*1.609,2)
+        return str(round(data*1.609,2))
     if(dataType == 3):
         #calculate snowfall
-        return round(data*2.54,2)
+        return str(round(data*2.54,2))
 
 #a function to gather data from the user and print the results 
 def gatherAndShowData(option):
     if(option == 1):
         Temp = input('ok, how cold is it right now? (in Fahrenheit)\n')
-        print("Ok, so the temperature in Celsius is", calculateData(1,float(Temp)), "degrees")
+        print("Ok, so the temperature in Celsius is" + calculateData(1,float(Temp)), "degrees")
         #exit()
     elif(option == 2):
         Miles = input('ok, how fast is the wind going right now? (in miles)\n')
@@ -33,11 +33,13 @@ def gatherAndShowData(option):
 print("Hello! this program is designed to help convert units of measurement for weather from Fahrenheit to Celsius or imperial to metric!")
 print("First what are you trying to convert? option 1: temperature, option 2: windspeed, option 3: snowfall")
 
+
 optionInput = input('please type the number of the option you would like to select\n')
 try:
     selectedOption = float(optionInput)
 except:
-    print("the program expects you to type the number 1, 2, or 3")
+    print("the program expects you to type the numbers 1, 2, or 3")
     exit()
 
 gatherAndShowData(float(selectedOption))
+
