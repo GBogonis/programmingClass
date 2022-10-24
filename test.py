@@ -1,7 +1,8 @@
 #test
 #from ctypes.wintypes import PINT
 import time
-
+import random
+'''
 numm = input('pick a number\n')
 numm = int(numm)
 
@@ -20,3 +21,6 @@ while True:
 #0 in the minimum and 55 is max, it will add the -5 to i every loop and will only run the code when i is in that range
 for numm in range(0,int(numm)+1,5):
     print(numm)
+'''
+while True:
+    print(random.randint(1,20))
