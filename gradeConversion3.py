@@ -1,9 +1,14 @@
 #start
 
+#varible for keeping track of the total grades for the average
 totalGrades = 0
 totalGrades = float(totalGrades)
-def convertGrades(double,total):
-    total = total + double
+def convertGrades(double):
+    #importing the totalgrades var so I can use it in the fuction (this took me a while to figure out)
+    global totalGrades
+    totalGrades += double
+    
+    #re-used if logic ladder 
     try:
         if(double <= 1.9):
             return"your grade is a NC, meaning you got no credits and you failed the class :( "
@@ -38,18 +43,22 @@ def askGrade():
 #start main code
 print("Hello and welcome to the grade coversion program!")
 while True:
-    numOfStudents = input('How many students need grades converted?\n')
+    #taking the amount of students that need grades converted not just setting it at 5
+    totalNumOfStudents = input('How many students need grades converted?\n')
     try:
-        numOfStudents=int(numOfStudents)
+        totalNumOfStudents=int(totalNumOfStudents)
         break
     except:
         print('the program expects a solid number, try again')
 
+numOfStudents = totalNumOfStudents
 
+#runs for as many times as needed by the user
 for numOfStudents in range(int(numOfStudents),0,-1):
     print(convertGrades(askGrade()))
     print("There are ",numOfStudents-1, "left")
 
-print(numOfStudents)
+#printing the class average using 
+print(totalGrades/totalNumOfStudents, " is the class average!")
 print("Thank you!")
 #End
