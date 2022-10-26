@@ -23,3 +23,7 @@ print(quote2[37:62])
 
 print(quote1.replace("Blue","Lavender"))
 print(quote2.replace("perch","sofa"))
+
+
+if(quote1.find('Norwegian')):
+    print(quote1.replace('Norwegian',))
