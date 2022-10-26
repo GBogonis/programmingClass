@@ -1,12 +1,14 @@
 #start
 
-#asking the user for their grade
-grade = input('Hello! to convert your grade first we need to know your grade! \n')
-#converting the input to a float
+#asking the user for their grade and converting the input to a float
 try:
+    grade = input('Hello! to convert your grade first we need to know your grade! \n')
     grade = float(grade)
 except:
+    #if they input something wrong then the except catches it
     print("please enter a number next time")
+    exit()
+
 
 #big IF ladder for converting the grade
 

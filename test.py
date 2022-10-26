@@ -25,7 +25,7 @@ for numm in range(0,int(numm)+1,5):
 
 #while True:
     #print(random.randint(1,20))
-
+'''
 num = input("Enter any number to test whether it is odd or even:\n")
 
 
@@ -38,3 +38,11 @@ numlist = [1, 2, 3, 4, 5, 6, 7, 100, 110, 21, 33, 32, 2, 4, 13]
 
 for x in numlist:
     print(x)
+'''
+
+word = 'banana'
+count = 0
+for letter in word:
+    if letter == 'a':
+        count = count + 1
+print(count)
