@@ -17,3 +17,9 @@ for letter in quote2:
     if letter == 'e':
         count2 = count2 + 1
 print("There are ",count2, '"e"s in quote 2')
+
+print(quote1[10:32])
+print(quote2[37:62])
+
+print(quote1.replace("Blue","Lavender"))
+print(quote2.replace("perch","sofa"))
