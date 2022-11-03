@@ -8,37 +8,30 @@ def fractionToDecimal(a,b):
 #intro
 print("Hello! this program will convert a fraction to a decimal.")
 
-#I used 2 "while true" loops, one for making sure the user gave a whole number and the other to make sure the user gave a positive number 
-while True:
-    while True:
-        #logic for ensuring a whole number
-        fractionA = input('what is the numerator of the fraction?\n')
-        try:
-            fractionA = int(fractionA)
-            break
-        except:
-            print('The program wants a positive whole number')
-    #logic to ensure a positive number
-    if(fractionA>0):
-        break
-    else:
-        print('The program can only work with positive numbers')
 
+#4 different checks to make sure there aren't any errors
 while True:
-    while True:
-        #logic for ensuring a whole number
-        fractionB = input('and what is the denominator of the fraction?\n')
+    #taking input
+    fractionStr = input('please inter the fraction you want to convert (xx/yy format please)\n')
+
+    #checks for a "/"
+    if(fractionStr.find('/')>=0):
+        #using the position of the "/" in the string to divide it up and to get our numbers
+        slashPos = fractionStr.find('/')
+        numerator = fractionStr[:slashPos]
+        denominator = fractionStr[slashPos+1:]
         try:
-            fractionB = int(fractionB)
-            break
+            numerator = int(numerator)
+            denominator = int(denominator)
+            if(denominator == 0):
+                print("can't devide by 0")
+            else:
+                break
         except:
-            print('The program wants a positive whole number')
-    #logic to ensure a positive number
-    if(fractionB>0):
-        break
+            print('make sure you have 2 whole numbers divided by a "/"')
     else:
-        print('The program can only work with positive numbers')
+        print('make sure your fraction has a "/" in it')
 
 #printing out final results 
-print("you decimal is ", fractionToDecimal(fractionA,fractionB))
+print("you decimal is", fractionToDecimal(numerator,denominator))
 print("Thank you!")
