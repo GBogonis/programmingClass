@@ -48,3 +48,10 @@ for letter in word:
 print(count)
 
 print("Fake Python".replace("Fake", "Real"))
+
+print("Yes or no?")
+answer = input(' > ')
+if(answer.lower() == 'yes'):
+    print('pog')
+else:
+    print('cringe')
