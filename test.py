@@ -73,4 +73,6 @@ for line in fhand:
     print(line)
 
 for line in fhand.readlines():
-    if()
+    if(line == 'ahh'):
+        print('pog')
+        break
