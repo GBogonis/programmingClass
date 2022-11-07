@@ -38,7 +38,7 @@ numlist = [1, 2, 3, 4, 5, 6, 7, 100, 110, 21, 33, 32, 2, 4, 13]
 
 for x in numlist:
     print(x)
-'''
+
 
 word = 'banana'
 count = 0
@@ -55,3 +55,22 @@ if(answer.lower() == 'yes'):
     print('pog')
 else:
     print('cringe')
+    
+word_file = open("scrabble_wds.txt")
+word = 'abandoning'
+for line in word_file:
+    if(line.find(word) != -1):
+        print('pog')  
+        break 
+    else:
+        print('cringe')
+print('end')
+'''
+fhand = open('scrabble_wds.txt')
+for line in fhand:
+    line = line.rstrip()
+    if line.find('aah') == -1: continue
+    print(line)
+
+for line in fhand.readlines():
+    if()
