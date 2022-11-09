@@ -5,18 +5,16 @@ word_file = open("scrabble_wds.txt")
 
 #function that takes a string and returns a true if it is in the list and false if it isn't
 def checkWord(word):
-    wordList = word_file.read()
     word = str(word)
     #makes the word lower case so it matches with the word doc
-    if(word in wordList):
-        print(word)
+    if(word.lower() in word_file):
         return True
     else:
         return False
 
 print('Hello! Welcome to the scrabble word checker, this program will check any word you give it and tell you if it is legal in a game of scrabble!')
 word = input('please inter the word you want to check \n')
-word = word.lower()
+
 if(checkWord(word)):
     print(word, 'is totaly legal in a game of scrabble!')
 else:

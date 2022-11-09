@@ -65,14 +65,18 @@ for line in word_file:
     else:
         print('cringe')
 print('end')
-'''
-fhand = open('scrabble_wds.txt')
+
+
 for line in fhand:
     line = line.rstrip()
     if line.find('aah') == -1: continue
     print(line)
+'''
+fhand = open('scrabble_wds.txt')
+linee = fhand.read()
 
-for line in fhand.readlines():
-    if(line == 'ahh'):
-        print('pog')
-        break
+word = input('word?\n')
+word = word.lower()
+print(word)
+if word in linee:
+    print('pog')
