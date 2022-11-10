@@ -1,0 +1,18 @@
+Charles Babbage
+3.4
+Alan Turing
+3.1
+Linus Torvalds
+2.3
+Grace Hopper
+3.7
+Steve Jobs
+1.9
+Ada Lovelace
+3.9
+Gary Kildall
+3.6
+Shelly Turkle
+3.1
+Bill Gates
+2.1
