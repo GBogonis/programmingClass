@@ -20,11 +20,15 @@ def convertGrades(grade):
         return"function expects a float"
 
 #lists for the names and grades and a for in loop to put the names and grades into the correct lists
-
+nameList = []
+gradeList = []
 for line in gradeFile:
     try:
         line = float(line)
-        print(convertGrades(line))
+        gradeList.append(line)
     except:
-        print(line)
-print('End')
+        nameList.append(line)
+
+#loop to print every persons name and grade
+for person in range(len(nameList),0,-1):
+    print(nameList[person-1], convertGrades(gradeList[person-1]))
