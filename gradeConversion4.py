@@ -19,7 +19,7 @@ def convertGrades(grade):
     except:
         return"function expects a float"
 
-#lists for the names and grades and a for in loop to put the names and grades into the correct lists
+#loop to print the names and grades by trying to convert the line into a float then into a letter grade but if its not possible(if its a name) it will just print normal. 
 
 for line in gradeFile:
     try:
