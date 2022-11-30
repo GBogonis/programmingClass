@@ -100,4 +100,26 @@ for col in file:
 	people.append(col['Goat'])
 
 # printing lists
-print('People:', people)
+#print('People:', people)
+
+
+try:
+    fhand = open('Abe_Lincoln_speech.txt')
+except:
+    print('File cannot be opened:')
+    exit()
+
+counts = dict()
+for line in fhand:
+    words = line.split()
+    for word in words:
+        if word not in counts:
+            counts[word] = 1
+        else:
+            counts[word] += 1
+
+fin_max = max(counts, key=counts.get)
+thing = counts.get(fin_max)
+print(thing)
+print("Maximum value:",fin_max)
+
