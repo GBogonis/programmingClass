@@ -1,6 +1,6 @@
 #start
 peopleFile = open("peoples.csv")
-#data format
+#data format:
 #last name, first name, weight, hight, hobby, food
 
 #function 1 to tell everyone to have a merry festivus(off-brand Christmas)
