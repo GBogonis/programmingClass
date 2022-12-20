@@ -35,7 +35,7 @@ while True:
     print(word,"in klingon is",english2klingon[word.lower()])
 
     #asking if user want to translate another word
-    cont = input("whould you like to translate another word?\n")
+    cont = input("would you like to translate another word?\n")
     if(cont.lower() == 'yes'):
         print("ok")
     elif(cont.lower() == 'no'):

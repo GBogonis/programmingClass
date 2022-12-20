@@ -81,7 +81,7 @@ word = word.lower()
 print(word)
 if word in linee:
     print('pog')
-'''
+
 
 
 # open the file in read mode
@@ -122,4 +122,13 @@ fin_max = max(counts, key=counts.get)
 thing = counts.get(fin_max)
 print(thing)
 print("Maximum value:",fin_max)
+'''
 
+word = input('>')
+def reverse(s):
+    str = ""
+    for i in s:
+        str = i + str
+    return str
+palindrome = word + reverse(word)
+print(palindrome)
