@@ -20,21 +20,14 @@ for letter in quote2:
 print("There are ",count2, '"e"s in quote 2')
 
 #part 2
-print(quote1[10:32])
-print(quote2[37:62])
+print(quote1[quote1.find('not'):quote1.find('restin') + len('restin')])
+print(quote2[quote2.find('parrot'):quote2.find('home') + len('home')])
 
 #part 3
 print(quote1.replace("Blue","Lavender"))
 print(quote2.replace("perch","sofa"))
 
 #part 4
-if(quote1.find('Norwegian')>0):
-    print(quote1.replace('Norwegian','Norwegian'.capitalize))
-
-if(quote2.find('Norwegian')>0):
-    print(quote2.replace('Norwegian','Norwegian'.capitalize))
-
-#part 5
 print(len(quote1))
 print(len(quote2))
 if(len(quote1) > len(quote2)):

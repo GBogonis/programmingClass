@@ -10,6 +10,9 @@ except:
 keyWords = ["mummy","werewolf","disguise","graveyard","cackle","cobweb","dracula","ghostly","mischief","panic"]
 
 for line in file:
-    line = line.strip()
-    print(line)
-    print(line.find('mummy'))
+    lineStrip = line.strip()
+    print(lineStrip)
+    if(lineStrip.find('m u m m y') == -1):
+        print(-1)
+    else:
+        print(lineStrip[lineStrip.find('m u mm y'): lineStrip.find('m u m m y')+ len('m u m m y')])

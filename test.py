@@ -122,7 +122,7 @@ fin_max = max(counts, key=counts.get)
 thing = counts.get(fin_max)
 print(thing)
 print("Maximum value:",fin_max)
-'''
+
 
 word = input('>')
 def reverse(s):
@@ -132,3 +132,4 @@ def reverse(s):
     return str
 palindrome = word + reverse(word)
 print(palindrome)
+'''
