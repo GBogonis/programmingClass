@@ -133,3 +133,32 @@ def reverse(s):
 palindrome = word + reverse(word)
 print(palindrome)
 '''
+# Program to check if a number is prime or not
+
+example = 29
+
+# To take input from the user
+#num = int(input("Enter a number: "))
+
+numlist = [611,612,613,617,73,77,79,5403,5402,5407,669,1188,1189]
+
+def primeNumCheck(num):
+    flag = False
+    if num == 1:
+        flag = False
+    elif num > 1:
+        # check for factors
+        for i in range(2, num):
+            if (num % i) == 0:
+                # if factor is found, set flag to True
+                flag = True
+                # break out of loop
+                break
+
+        return flag
+
+for num in numlist:
+    if(primeNumCheck(num)):
+        print(num, "is a prime number")
+    else:
+        print(num, 'is not a prime number')
