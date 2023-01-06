@@ -7,12 +7,19 @@ except:
     print('File cannot be opened')
     exit()
 
+#list of words to find in the wordsearch
 keyWords = ["mummy","werewolf","disguise","graveyard","cackle","cobweb","dracula","ghostly","mischief","panic"]
 
 for line in file:
-    lineStrip = line.strip()
-    print(lineStrip)
-    if(lineStrip.find('m u m m y') == -1):
-        print(-1)
-    else:
-        print(lineStrip[lineStrip.find('m u mm y'): lineStrip.find('m u m m y')+ len('m u m m y')])
+    
+    #gets rid of all the spaces in the line
+    rawLine = line.split(' ')
+    formatedLine = ''.join(rawLine)
+    
+    for word in keyWords:
+        #looks for the words in the lines and makes them with all uppercase and prints out the line
+        if(formatedLine.find(word) != -1):
+            finishedline = formatedLine.replace(word,word.upper())
+            print('found:', word, 'in', finishedline)
+        
+#end

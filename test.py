@@ -132,7 +132,7 @@ def reverse(s):
     return str
 palindrome = word + reverse(word)
 print(palindrome)
-'''
+
 # Program to check if a number is prime or not
 
 example = 29
@@ -162,3 +162,23 @@ for num in numlist:
         print(num, "is a prime number")
     else:
         print(num, 'is not a prime number')
+        '''
+
+
+print("I am sorting people by age. Enter your age.")
+#added a try around the age input to ensure a usable number
+while True:
+    try:
+        age = input(" > ")
+        age = int(age)
+        break
+    except:
+        print('age needs to be a whole number')
+
+#the numbers being compaired were in quoat marks so they were strings not INTs
+if age < 13:
+    print("kid")
+elif age < 20:
+    print("teen")
+else:
+    print("adult")

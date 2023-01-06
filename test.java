@@ -5,10 +5,11 @@ public class test {
 
     public static void main(String[] args) {
         System.out.println("hello wolrd");
-        Scanner Scanner = new Scanner(System.in);  // Create a Scanner object
-        System.out.println("Enter number");
-        int num = Scanner.nextInt();  // Read user input
-        System.out.println(10 + num);  // Output user input
+        try (Scanner Scanner = new Scanner(System.in)) {
+            System.out.println("Enter number");
+            int num = Scanner.nextInt();  // Read user input
+            System.out.println(10 + num);  // Output user input
+        }
     }
 
 }
