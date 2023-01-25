@@ -3,6 +3,8 @@
 import time
 import random
 import csv
+import pygame
+
 '''
 numm = input('pick a number\n')
 numm = int(numm)
