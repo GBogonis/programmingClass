@@ -164,7 +164,7 @@ for num in numlist:
         print(num, "is a prime number")
     else:
         print(num, 'is not a prime number')
-        '''
+        
 
 
 print("I am sorting people by age. Enter your age.")
@@ -184,3 +184,8 @@ elif age < 20:
     print("teen")
 else:
     print("adult")
+'''
+numm = input('>')
+#0 in the minimum and 55 is max, it will add the -5 to i every loop and will only run the code when i is in that range
+for numm in range(int(numm),0,-1):
+    print(numm)

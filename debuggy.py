@@ -23,13 +23,14 @@ print(summy)
 
 # number 3 - add some numbers
 
-int = 12
+#renamed 'int' to 'inta' because having a var named int messes stuff up 
+inta = 12
 intb = 14
 #13 was defined as a string not a int
 intc = 13
 #2 numbers cannot be multiplied by putting one in '()' instead use a '*'
-intd = int*intb
-inte = int + intb + intd
+intd = inta*intb
+inte = inta + intb + intd
 print(inte)
 
 
@@ -46,12 +47,9 @@ for i in namelist:
 print("I am sorting people by age. Enter your age.")
 #added a try around the age input to ensure a usable number
 while True:
-    age = input(" > ")
     try:
-        print(type(age))
+        age = input(" > ")
         age = int(age)
-        
-        print(type(age))
         break
     except:
         print('age needs to be a whole number')
@@ -65,24 +63,28 @@ else:
     print("adult")
 
 # number 6 - sum a list of numbers
-
-listy = (3,4,5,6,7,8)
-sum = 0
-sum = sum(listy)
-print(sum)
+#changed listy to a list by added square brackets 
+listy = [3,4,5,6,7,8]
+#changed the name of the var to something that wasen't being used
+summyy = 0
+summyy = sum(listy)
+print(summyy)
 
 # number 7 - sum a list of numbers
-
-listy = (9,8,7,6,5,4,3,2,1)
-for num in listy:
-    summy = 0
-    summy += num
-print("The sum is", summy)
+#changed the name of the list to something that was unused
+listyy = (9,8,7,6,5,4,3,2,1)
+#declaring the var outside of the loop so it doen't reset every time, and used different name
+summy1 = 0
+for num in listyy:
+    summy1 += num
+print("The sum is", summy1)
 
 # number 8 - functions
-
+#made the vars in the function global so both function could use it
 def funcA():
+    global myname
     myname = "JR"
+    global myage
     myage = 70
 
 def funcB():
@@ -99,11 +101,14 @@ def area():
     y = 4
     rectarea = x * y
     return rectarea
+#calling the function by itself wont do anything, but calling it in a print will output the result
+print('area is', area())
 
-area()
 
 # 10 countdown backwards in a list
 
-listy = (1,2,3,4,5,6,7,8,9,10)
-for i in range(len(listy), 0, -1):
-    print(listy[i])
+listy1 = (1,2,3,4,5,6,7,8,9,10)
+#got rid of the range part of the loop, instead it just interates through the list in reverse
+for i in reversed(listy1):
+    #just prints the item from the loop not directly through the list
+    print(i)
