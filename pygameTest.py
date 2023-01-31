@@ -47,7 +47,7 @@ while not done:
         screen.fill(WHITE)
 
         # draw a green 40 pixel radius circle outline inside rectangle
-        pygame.draw.circle(screen,(BLUE),(circlePoseX,circlePoseY),40, 0)
+        pygame.draw.rect(screen, (BLUE), pygame.Rect(60, 30, 100, 160))
 
      # --- Go ahead and update the screen with what we've drawn.
         pygame.display.flip()
