@@ -9,6 +9,7 @@ BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
 GREEN = (0, 255, 0)
 RED = (255, 0, 0)
+BLUE = (0, 0, 255)
  
 pygame.init()
  
@@ -23,6 +24,14 @@ done = False
  
 # Used to manage how fast the screen refreshes
 clock = pygame.time.Clock()
+
+playerPosX = 350
+playerPosY = 250
+playerPos = playerPosX, playerPosY
+playerHealth = 250
+
+enemyPosX = 0
+enemyPosY = 0
  
 # -------- Main Program Loop -----------
 while not done:
@@ -30,13 +39,19 @@ while not done:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             done = True
- 
-    # --- Game logic should go here
     
- 
+    # --- Game logic should go here
+    if(enemyPosX != playerPosX):
+        enemyPosX += playerPosX/100
+    if(enemyPosY != playerPosY):
+        enemyPosY += playerPosY/100
+
+    
+
     # --- Drawing code should go here
     screen.fill(WHITE)
-    
+    pygame.draw.circle(screen,(BLUE),(playerPos),50)
+    pygame.draw.circle(screen,(RED),(enemyPosX,enemyPosY),30)
     # --- Go ahead and refresh the screen with what we've drawn.
     pygame.display.flip()
  
