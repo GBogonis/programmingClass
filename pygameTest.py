@@ -8,12 +8,16 @@ GREEN = ( 0, 255, 0)
 RED = ( 255, 0, 0)
 BLUE = ( 0, 0, 255)
 
-size = (700, 500)
+size = (1000, 1000)
 screen = pygame.display.set_mode(size)
 pygame.display.set_caption("gaming time")
 
 circlePoseX = 360
 circlePoseY = 250
+
+moonX = -300
+
+
 # Loop until the user clicks the close button.
 done = False
 
@@ -27,6 +31,7 @@ while not done:
         if event.type == pygame.QUIT: # If user clicked close
             done = True # Flag that we are done so we exit this loop
             print("User asked to quit.")
+        '''
         elif event.type == pygame.KEYDOWN:
             if event.key == pygame.K_RIGHT:
                 print('right')
@@ -40,18 +45,22 @@ while not done:
             elif event.key == pygame.K_DOWN:
                 print('down')
                 circlePoseY += 10
+                '''
 
-    # --- Game logic should go here
+# --- Game logic should go here
+    moonY = (.007*(moonX**2)+(moonX*.25))+100
+# --- Drawing code should go here
+    screen.fill(WHITE)
 
-    # --- Drawing code should go here
-        screen.fill(WHITE)
+    # draw a green 40 pixel radius circle outline inside rectangle
+    #pygame.draw.rect(screen, (BLUE), pygame.Rect(60, 30, 100, 160))
+    pygame.draw.circle(screen,(BLUE),(moonX+500,moonY),10,0)
+    moonX += 1
+    print('moonY:',moonY)
+    print('moonX:',moonX)
+    # --- Go ahead and update the screen with what we've drawn.
+    pygame.display.flip()
 
-        # draw a green 40 pixel radius circle outline inside rectangle
-        pygame.draw.rect(screen, (BLUE), pygame.Rect(60, 30, 100, 160))
-
-     # --- Go ahead and update the screen with what we've drawn.
-        pygame.display.flip()
-
-     # --- Limit to 60 frames per second
-        clock.tick(60)
+    # --- Limit to 60 frames per second
+    clock.tick(30)
 

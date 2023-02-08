@@ -31,6 +31,8 @@ for i in range(100):
     y = random.randrange(0, screenHight)
     snowList.append([x, y])
 
+moonX = 0
+moonY = -.1*moonX^2+350
  
 # Set variable to run loop until the user clicks the close button.
 done = False
@@ -46,7 +48,7 @@ while not done:
             done = True
  
     # --- Game logic should go here
-    
+    moonY = (.007*(moonX**2)+(moonX*.25))+100
     # --- Drawing code should go here
     screen.fill(BLUE)
     pygame.draw.rect(screen, (WHITE), pygame.Rect(0, 400, screenWidth, 100))
