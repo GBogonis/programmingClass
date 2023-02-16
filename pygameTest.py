@@ -8,7 +8,7 @@ GREEN = ( 0, 255, 0)
 RED = ( 255, 0, 0)
 BLUE = ( 0, 0, 255)
 
-size = (1000, 1000)
+size = (1000, 600)
 screen = pygame.display.set_mode(size)
 pygame.display.set_caption("gaming time")
 
@@ -48,16 +48,20 @@ while not done:
                 '''
 
 # --- Game logic should go here
-    moonY = (.007*(moonX**2)+(moonX*.25))+100
+    #moonY = (.007*(moonX**2)+(moonX*.25))+100
 # --- Drawing code should go here
     screen.fill(WHITE)
 
     # draw a green 40 pixel radius circle outline inside rectangle
     #pygame.draw.rect(screen, (BLUE), pygame.Rect(60, 30, 100, 160))
+    '''
     pygame.draw.circle(screen,(BLUE),(moonX+500,moonY),10,0)
     moonX += 1
     print('moonY:',moonY)
     print('moonX:',moonX)
+    '''
+    
+    pygame.draw.polygon(screen,BLACK,((200,100), (10,10), (10,200)),0)
     # --- Go ahead and update the screen with what we've drawn.
     pygame.display.flip()
 
