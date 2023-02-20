@@ -15,11 +15,12 @@ BLUE = (0, 0, 255)
 pygame.init()
  
 # Set the width and height of the screen [width, height]
-screenWidth = 700
-screenHight = 500
+screenWidth = 612
+screenHight = 383
 size = (screenWidth, screenHight)
 screen = pygame.display.set_mode(size)
 pygame.display.set_caption("My Pygame")
+oceanBackground = pygame.image.load("istockphoto-1215044710-612x612.jpg")
 
 #game variables/functions
 fishPos = (350,250)
@@ -69,7 +70,7 @@ while not done:
         otherFishY = 20
  
     # --- Drawing code should go here
-    screen.fill(BLUE)
+    screen.blit(oceanBackground,(0,0))
     #fish 1
     drawFish(fishPos[0],fishPos[1])
     #fish 2
