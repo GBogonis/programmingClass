@@ -1,6 +1,7 @@
 #start
 try:
     import pygame
+    from pygame.locals import *
 except:
     print("could not import pygame")
     exit() 
@@ -15,23 +16,25 @@ BLUE = (0, 0, 255)
 pygame.init()
  
 # Set the width and height of the screen [width, height]
-size = (700, 500)
+screenHight = 500
+screenWidth = 700
+size = (screenWidth, screenHight)
 screen = pygame.display.set_mode(size)
  
 pygame.display.set_caption("My Pygame")
  
 # Set variable to run loop until the user clicks the close button.
-done = False
+going = True
  
 # Used to manage how fast the screen refreshes
 clock = pygame.time.Clock()
  
 # -------- Main Program Loop -----------
-while not done:
+while going:
     # --- Main event to break loop when user quits
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
-            done = True
+            going = False
  
     # --- Game logic should go here
     
