@@ -19,7 +19,7 @@ def drawEnemy(pos):
     
     for i in range(len(enemyList)):
             #drawing the snow
-            pygame.draw.circle(screen, BLACK, enemyList[i], 2)
+            pygame.draw.circle(game.screen, game.colors['BLACK'], enemyList[i], 2)
             pygame.draw.circle(game.screen, game.colors["BLACK"], enemyList[i], 2)
             #move the snow flake down 5 pixel so it looks like it's falling
 
