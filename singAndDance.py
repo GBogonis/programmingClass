@@ -27,6 +27,9 @@ pygame.display.set_caption("My Pygame")
 #image stuff
 forestBackground = pygame.image.load("snow_forest.jpg")
 moose = pygame.image.load("moose_image.png")
+
+#sound file
+sound = pygame.mixer.Sound("bullwinkle_short.ogg")
  
 # Set variable to run loop until the user clicks the close button.
 going = True
@@ -40,6 +43,8 @@ while going:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             going = False
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            sound.play()
  
     # --- Game logic should go here
     
