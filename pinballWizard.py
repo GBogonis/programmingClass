@@ -18,8 +18,8 @@ colors = {'BLACK':(0,0,0),"WHITE":(255, 255, 255),"GREEN":(0, 255, 0),"RED":(255
 pygame.init()
  
 # Set the width and height of the screen [width, height]
-screenHight = 500
-screenWidth = 700
+screenHight = 700
+screenWidth = 1000
 size = (screenWidth, screenHight)
 screen = pygame.display.set_mode(size)
  
@@ -27,34 +27,14 @@ pygame.display.set_caption("My Pygame")
  
 # load ball image 
 ballSprite = pygame.image.load("intro_ball.gif")
-# frame surface of the rectanglular dimensions of the ball surface
-
-
-
-#animation variables
-snowList = []
-snowListSpeed = []
-
-for i in range(5):
-    x = random.randrange(0, screenWidth)
-    y = random.randrange(0, screenHight)
-    speed = [5, 5]
-    snowList.append([x, y])
-    snowListSpeed.append(speed)
- 
-#animation variables
-ballList = []
 ballListSpeed = []
 ballPos = []
-ballSpeed = [5, 5]
-
+ballRect = []
 for i in range(5):
-    ballPos.append([random.randrange(0, screenWidth),random.randrange(0, screenHight)])
-    ballListSpeed.append(ballSpeed)
-    ballrect = ballSprite.get_rect()
-    ballList.append(ballrect)
-    
-    
+    ballPos.append([random.randrange(0, screenWidth-111),random.randrange(0, screenHight-111)])
+    ballListSpeed.append([5,5])
+    ballRect.append(ballSprite.get_rect())
+  
 
 # Set variable to run loop until the user clicks the close button.
 going = True
@@ -70,38 +50,45 @@ while going:
             going = False
  
     # --- Game logic should go here
-   
     screen.fill(colors["BLACK"]) # note we refill the screen w/ black every flip() so no ghost trails :)
-
-    '''
-    # --- Drawing code should go here
-    for i in range(len(snowList)):
-        #drawing the snow
-        pygame.draw.circle(screen, colors["BLUE"], snowList[i], 10)
-        #screen.blit(ball, snowList[i])
-        
-        #move the snow flake down 5 pixel so it looks like it's falling
-        snowList[i][0] += snowListSpeed[i][0]
-        snowList[i][1] += snowListSpeed[i][1]
-
-        if snowList[i][0] < 11 or snowList[i][0] > screenWidth-11: # uses edges of ballrect surface to detect collision with screen surface
-            snowListSpeed[i][0] = -snowListSpeed[i][0] # reverse horizontal speed to stay on screen
-        if snowList[i][1] < 11 or snowList[i][1] > screenHight-11:
-            snowListSpeed[i][1] = -snowListSpeed[i][1] # reverse vertical speed to stay on screen
-    '''
-
-    for i in range(len(ballList)):
+    for i in range(len(ballPos)):
         ballPos[i][0] += ballListSpeed[i][0]
         ballPos[i][1] += ballListSpeed[i][1]
-        screen.blit(ballSprite,ballPos[i])
-        if ballPos[i][0] < 11 or ballPos[i][0] > screenWidth-11: # uses edges of ballrect surface to detect collision with screen surface
+        screen.blit(ballSprite,(ballPos[i][0],ballPos[i][1]))
+        #border collision 
+        #x
+        if ballPos[i][0] < 0 or ballPos[i][0] > screenWidth-111: # uses the position of the ball to detect collision with screen surface with a offset to acount for the image size
             ballListSpeed[i][0] = -ballListSpeed[i][0] # reverse horizontal speed to stay on screen
-        if ballPos[i][1] < 11 or ballPos[i][1] > screenHight-11:
+        #y
+        if ballPos[i][1] < 0 or ballPos[i][1] > screenHight-111:
             ballListSpeed[i][1] = -ballListSpeed[i][1] # reverse vertical speed to stay on screen
-
         
 
-    #screen.blit(ball, ballrect) # screen.blit takes 2 params - the first, ball, is drawn onto the second, ballrect surface
+        
+        #ball to ball collision
+        for e in range(len(ballPos)):
+            #iterating though ball list again for collision
+            #the purpose of 'e' is to be 'i' but it skips the ball we are already going through
+            e = i+1
+            if(e >= len(ballPos)):
+                e = len(ballPos)
+
+            print(e)
+            balltop = (ballRect[e].x + 50, ballRect[e].top)
+            ballleft = (ballRect[e].left, ballRect[e].y + 50)
+            ballright = (ballRect[e].right, ballRect[e].y + 50)
+            ballbottom = (ballRect[e].x + 50, ballRect[e].bottom)
+            
+            # check collision
+            if ballRect[i].collidepoint(ballleft):
+                ballListSpeed[i][0] = -ballListSpeed[i][0]
+            if ballRect[i].collidepoint(balltop):
+                ballListSpeed[i][1] = -ballListSpeed[i][1]
+            if ballRect[i].collidepoint(ballright):
+                ballListSpeed[i][0] = -ballListSpeed[i][0]
+            if ballRect[i].collidepoint(ballbottom):            
+                ballListSpeed[i][1] = -ballListSpeed[i][1]
+
     pygame.display.flip()
  
     # --- Limit to 60 frames per second
