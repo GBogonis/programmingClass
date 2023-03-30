@@ -30,8 +30,9 @@ ballSprite = pygame.image.load("intro_ball.gif")
 ballListSpeed = []
 ballPos = []
 ballRect = []
-for i in range(5):
+for i in range(2):
     ballPos.append([random.randrange(0, screenWidth-111),random.randrange(0, screenHight-111)])
+    #ballPos.append([screenWidth/2,random.randrange(0, screenHight-111)])
     ballListSpeed.append([5,5])
     ballRect.append(ballSprite.get_rect())
   
@@ -52,6 +53,10 @@ while going:
     # --- Game logic should go here
     screen.fill(colors["BLACK"]) # note we refill the screen w/ black every flip() so no ghost trails :)
     for i in range(len(ballPos)):
+        pygame.draw.line(screen,colors["WHITE"],ballPos[i],(ballPos[i][0]+111,ballPos[i][1]))
+        pygame.draw.line(screen,colors["WHITE"],(ballPos[i][0],ballPos[i][1]+111),(ballPos[i][0]+111,ballPos[i][1]+111))
+        pygame.draw.line(screen,colors["WHITE"],ballPos[i],(ballPos[i][0],ballPos[i][1]+111))
+        pygame.draw.line(screen,colors["WHITE"],(ballPos[i][0]+111,ballPos[i][1]),(ballPos[i][0]+111,ballPos[i][1]+111))
         ballPos[i][0] += ballListSpeed[i][0]
         ballPos[i][1] += ballListSpeed[i][1]
         screen.blit(ballSprite,(ballPos[i][0],ballPos[i][1]))
@@ -69,30 +74,44 @@ while going:
         for e in range(len(ballPos)):
             #iterating though ball list again for collision
             #the purpose of 'e' is to be 'i' but it skips the ball we are already going through
-            e = i+1
-            if(e >= len(ballPos)):
-                e = len(ballPos)
-
-            print(e)
-            balltop = (ballRect[e].x + 50, ballRect[e].top)
-            ballleft = (ballRect[e].left, ballRect[e].y + 50)
-            ballright = (ballRect[e].right, ballRect[e].y + 50)
-            ballbottom = (ballRect[e].x + 50, ballRect[e].bottom)
-            
-            # check collision
-            if ballRect[i].collidepoint(ballleft):
-                ballListSpeed[i][0] = -ballListSpeed[i][0]
-            if ballRect[i].collidepoint(balltop):
-                ballListSpeed[i][1] = -ballListSpeed[i][1]
-            if ballRect[i].collidepoint(ballright):
-                ballListSpeed[i][0] = -ballListSpeed[i][0]
-            if ballRect[i].collidepoint(ballbottom):            
-                ballListSpeed[i][1] = -ballListSpeed[i][1]
+            #print('in loop')
+            if(i != e):
+                
+                print('ball i:',ballPos[i][0], 'ball e:', ballPos[e][0])
+                print('diff:', ballPos[i][1] - ballPos[e][1])
+                
+                if(ballPos[i][0]+111 >= ballPos[e][0] and ballPos[i][0]-111 <= ballPos[e][0]):
+                    ballListSpeed[i][0] = -ballListSpeed[i][0] # reverse horizontal speed to stay on screen
+                    ballListSpeed[e][0] = -ballListSpeed[e][0] # reverse horizontal speed to stay on screen
+                    
+                    print('collide')
+                
+                if(ballPos[i][1]+111 >= ballPos[e][1] and ballPos[i][1]-111 <= ballPos[e][1]):
+                    ballListSpeed[i][1] = -ballListSpeed[i][1] # reverse horizontal speed to stay on screen
+                    ballListSpeed[e][1] = -ballListSpeed[e][1] # reverse horizontal speed to stay on screen
+                    print('collide')
+                """
+                print('collision running')
+                balltop = (ballRect[e].x, ballRect[e].top)
+                ballleft = (ballRect[e].left, ballRect[e].y)
+                ballright = (ballRect[e].right, ballRect[e].y)
+                ballbottom = (ballRect[e].x, ballRect[e].bottom)
+                
+                # check collision
+                if ballRect[i].collidepoint(ballleft):
+                    ballListSpeed[i][0] = -ballListSpeed[i][0]
+                if ballRect[i].collidepoint(balltop):
+                    ballListSpeed[i][1] = -ballListSpeed[i][1]
+                if ballRect[i].collidepoint(ballright):
+                    ballListSpeed[i][0] = -ballListSpeed[i][0]
+                if ballRect[i].collidepoint(ballbottom):            
+                    ballListSpeed[i][1] = -ballListSpeed[i][1]
+                """
 
     pygame.display.flip()
  
     # --- Limit to 60 frames per second
-    clock.tick(60)
+    clock.tick(30)
  
 # Close the window and quit.
 pygame.quit()
