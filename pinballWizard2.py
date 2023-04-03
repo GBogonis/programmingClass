@@ -30,10 +30,9 @@ ballSprite = pygame.image.load("intro_ball.gif")
 ballListSpeed = []
 ballPos = []
 ballRect = []
-for i in range(2):
-    ballPos.append([random.randrange(0, screenWidth-111),random.randrange(0, screenHight-111)])
-    ballListSpeed.append([5,5])
-    ballRect.append(ballSprite.get_rect())
+ballPos.append([random.randrange(0, screenWidth-111),random.randrange(0, screenHight-111)])
+ballListSpeed.append([5,5])
+ballRect.append(ballSprite.get_rect())
   
 
 # Set variable to run loop until the user clicks the close button.
@@ -52,13 +51,6 @@ while going:
     # --- Game logic should go here
     screen.fill(colors["BLACK"]) # note we refill the screen w/ black every flip() so no ghost trails :)
     for i in range(len(ballPos)):
-        '''
-        pygame.draw.line(screen,colors["WHITE"],ballPos[i],(ballPos[i][0]+111,ballPos[i][1]))
-        pygame.draw.line(screen,colors["WHITE"],(ballPos[i][0],ballPos[i][1]+111),(ballPos[i][0]+111,ballPos[i][1]+111))
-        pygame.draw.line(screen,colors["WHITE"],ballPos[i],(ballPos[i][0],ballPos[i][1]+111))
-        pygame.draw.line(screen,colors["WHITE"],(ballPos[i][0]+111,ballPos[i][1]),(ballPos[i][0]+111,ballPos[i][1]+111))
-        '''
-
         ballPos[i][0] += ballListSpeed[i][0]
         ballPos[i][1] += ballListSpeed[i][1]
         screen.blit(ballSprite,(ballPos[i][0],ballPos[i][1]))
@@ -78,28 +70,9 @@ while going:
             #the purpose of 'e' is to be 'i' but it skips the ball we are already going through
             #print('in loop')
             if(i != e):
-                
-                #print('ball i:',ballPos[i][0], 'ball e:', ballPos[e][0])
-                #print('diff:', ballPos[i][1] - ballPos[e][1])
-                
-                if((ballPos[i][0]+105 >= ballPos[e][0] and ballPos[i][0]-105 <= ballPos[e][0]) and (ballPos[i][1]+105 >= ballPos[e][1] and ballPos[i][1]-105 <= ballPos[e][1])):
-                    ballListSpeed[i][0] = -ballListSpeed[i][0]
-                    ballListSpeed[e][0] = -ballListSpeed[e][0]
-                    ballListSpeed[i][1] = -ballListSpeed[i][1]
-                    ballListSpeed[e][1] = -ballListSpeed[e][1]
 
-                '''
-                if(ballPos[i][0]+111 >= ballPos[e][0] and ballPos[i][0]-111 <= ballPos[e][0]):
-                    ballListSpeed[i][0] = -ballListSpeed[i][0]
-                    ballListSpeed[e][0] = -ballListSpeed[e][0]
-                    
-                    print('collide')
-                
-                if(ballPos[i][1]+111 >= ballPos[e][1] and ballPos[i][1]-111 <= ballPos[e][1]):
-                    ballListSpeed[i][1] = -ballListSpeed[i][1]
-                    ballListSpeed[e][1] = -ballListSpeed[e][1]
-                    print('collide')
-
+                #note: try this way
+                #https://www.geeksforgeeks.org/adding-collisions-using-pygame-rect-colliderect-in-pygame/?ref=rp
                 print('collision running')
                 balltop = (ballRect[e].x, ballRect[e].top)
                 ballleft = (ballRect[e].left, ballRect[e].y)
@@ -115,7 +88,7 @@ while going:
                     ballListSpeed[i][0] = -ballListSpeed[i][0]
                 if ballRect[i].collidepoint(ballbottom):            
                     ballListSpeed[i][1] = -ballListSpeed[i][1]
-                '''
+
     pygame.display.flip()
  
     # --- Limit to 60 frames per second
