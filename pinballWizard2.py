@@ -34,13 +34,21 @@ ball1pos = [random.randrange(0, screenWidth-111),random.randrange(0, screenHight
 ball2pos = [random.randrange(0, screenWidth-111),random.randrange(0, screenHight-111)]
 ball1Speed = [5,5]
 ball2Speed = [5,5]
-
+ball1Rect = ballSprite.get_rect()
+ball1RectTop = ballSprite.get_rect().midtop
+ball1RectBottom = ballSprite.get_rect().midbottom
+ball1RectLeft = ballSprite.get_rect().midleft
+ball1RectRight = ballSprite.get_rect().midright
+ball2RectTop = ballSprite.get_rect().midtop
+ball2RectBottom = ballSprite.get_rect().midbottom
+ball2RectLeft = ballSprite.get_rect().midleft
+ball2RectRight = ballSprite.get_rect().midright
 '''
 ballPos.append([random.randrange(0, screenWidth-111),random.randrange(0, screenHight-111)])
 ballListSpeed.append([5,5])
 ballRect.append(ballSprite.get_rect())
 ''' 
-player_rect = Rect(200, 500, 50, 50)
+
 
 # Set variable to run loop until the user clicks the close button.
 going = True
@@ -57,16 +65,9 @@ while going:
  
     # --- Game logic should go here
     screen.fill(colors["BLACK"]) # note we refill the screen w/ black every flip() so no ghost trails :)
-    ball1Rect = ballSprite.get_rect()
-    ball1RectTop = ballSprite.get_rect().midtop
-    ball1RectBottom = ballSprite.get_rect().midbottom
-    ball1RectLeft = ballSprite.get_rect().midleft
-    ball1RectRight = ballSprite.get_rect().midright
-    ball2RectTop = ballSprite.get_rect().midtop
-    ball2RectBottom = ballSprite.get_rect().midbottom
-    ball2RectLeft = ballSprite.get_rect().midleft
-    ball2RectRight = ballSprite.get_rect().midright
-    ball1Rect.move(ball1Speed[0],ball1Speed[1])
+    #update with offset todo
+    ball1Rect.update(ball1pos)
+    #ball1Rect.move(ball1Speed[0],ball1Speed[1])
     '''
     #ball1pos[0] += ball1Speed[0]
     ball1pos[1] += ball1Speed[1]
