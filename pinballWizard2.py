@@ -24,7 +24,9 @@ size = (screenWidth, screenHight)
 screen = pygame.display.set_mode(size)
  
 pygame.display.set_caption("My Pygame")
- 
+
+#useful rect docs
+#https://pygame.readthedocs.io/en/latest/rect/rect.html
 # load ball image
 ballSprite = pygame.image.load("intro_ball.gif")
 ballListSpeed = []
@@ -66,7 +68,7 @@ while going:
     # --- Game logic should go here
     screen.fill(colors["BLACK"]) # note we refill the screen w/ black every flip() so no ghost trails :)
     #update with offset todo
-    ball1Rect.update(ball1pos)
+    ball1Rect.update()
     #ball1Rect.move(ball1Speed[0],ball1Speed[1])
     '''
     #ball1pos[0] += ball1Speed[0]
