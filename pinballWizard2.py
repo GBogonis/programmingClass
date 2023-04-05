@@ -34,8 +34,7 @@ ball1pos = [random.randrange(0, screenWidth-111),random.randrange(0, screenHight
 ball2pos = [random.randrange(0, screenWidth-111),random.randrange(0, screenHight-111)]
 ball1Speed = [5,5]
 ball2Speed = [5,5]
-ball1Rect = ballSprite.get_rect()
-ball2Rect = ballSprite.get_rect()
+
 '''
 ballPos.append([random.randrange(0, screenWidth-111),random.randrange(0, screenHight-111)])
 ballListSpeed.append([5,5])
@@ -58,19 +57,33 @@ while going:
  
     # --- Game logic should go here
     screen.fill(colors["BLACK"]) # note we refill the screen w/ black every flip() so no ghost trails :)
-    ball1pos[0] += ball1Speed[0]
+    ball1Rect = ballSprite.get_rect()
+    ball1RectTop = ballSprite.get_rect().midtop
+    ball1RectBottom = ballSprite.get_rect().midbottom
+    ball1RectLeft = ballSprite.get_rect().midleft
+    ball1RectRight = ballSprite.get_rect().midright
+    ball2RectTop = ballSprite.get_rect().midtop
+    ball2RectBottom = ballSprite.get_rect().midbottom
+    ball2RectLeft = ballSprite.get_rect().midleft
+    ball2RectRight = ballSprite.get_rect().midright
+    ball1Rect.move(ball1Speed[0],ball1Speed[1])
+    '''
+    #ball1pos[0] += ball1Speed[0]
     ball1pos[1] += ball1Speed[1]
     ball2pos[0] += ball2Speed[0]
     ball2pos[1] += ball2Speed[1]
+    '''
     screen.blit(ballSprite, (ball1pos))
     screen.blit(ballSprite,(ball2pos))
+    print(ball1RectTop)
+    '''
     #x
-    if ball1Pos[0] < 0 or ball1Pos[0] > screenWidth-111: # uses the position of the ball to detect collision with screen surface with a offset to acount for the image size
+    if ball1RectTop < 0 or ball1RectBottom > screenWidth-111: # uses the position of the ball to detect collision with screen surface with a offset to acount for the image size
         ballListSpeed[0] = -ballListSpeed[0]
     #y
-    if ball1Pos[1] < 0 or ball1Pos[1] > screenHight-111:
+    if ball1RectLeft < 0 or ball1RectRight > screenHight-111:
         ballListSpeed[1] = -ballListSpeed[1] # reverse vertical speed to stay on screen
-
+    '''
 
 
     '''
