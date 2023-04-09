@@ -1,7 +1,9 @@
 try:
     import pygame
+    from pygame.locals import *
     import random
     import enemy
+    import math
 except:
     print("could not import pygame")
     exit() 
@@ -21,6 +23,7 @@ screenWidth = 700
 screenHight = 700
 screenSize = (screenWidth, screenHight)
 screen = pygame.display.set_mode(screenSize)
+#screen = pygame.display.set_mode(screenSize, pygame.FULLSCREEN)
  
 pygame.display.set_caption("My Pygame")
 
@@ -31,73 +34,68 @@ done = False
 # Used to manage how fast the screen refreshes
 clock = pygame.time.Clock()
 
-playerPosX = 350
-playerPosY = 250
+playerPosX = screenWidth/2
+playerPosY = screenHight/2
 playerPos = playerPosX, playerPosY
 playerHealth = 250
 
-
 attacking = False
-'''
-#animation variables
-enemyList = []
 
+class Bullet:
+    def __init__(self, x, y):
+        self.pos = (x, y)
+        mx, my = pygame.mouse.get_pos()
+        self.dir = (mx - x, my - y)
+        length = math.hypot(*self.dir)
+        if length == 0.0:
+            self.dir = (0, -1)
+        else:
+            self.dir = (self.dir[0]/length, self.dir[1]/length)
+        angle = math.degrees(math.atan2(-self.dir[1], self.dir[0]))
 
-for i in range(10):
-    x = random.randrange(0, screenWidth)
-    y = random.randrange(0, screenHight)
-    enemyList.append([x, y])
+        self.bullet = pygame.Surface((7, 2)).convert_alpha()
+        self.bullet.fill(colors["RED"])
+        self.bullet = pygame.transform.rotate(self.bullet, angle)
+        self.speed = 2
 
-def drawEnemy(pos):
-    pygame.draw.circle(screen, BLACK, pos, 2)
-'''
+    def update(self):  
+        self.pos = (self.pos[0]+self.dir[0]*self.speed, 
+                    self.pos[1]+self.dir[1]*self.speed)
+
+    def draw(self, surf):
+        bullet_rect = self.bullet.get_rect(center = self.pos)
+        surf.blit(self.bullet, bullet_rect)  
+
+bullets = []
+pos = (250, 250)
 # -------- Main Program Loop -----------
 while not done:
     # --- Main event to break loop when user quits
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             done = True
-        if event.type == pygame.MOUSEBUTTONUP:
-            attacking = True
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            bullets.append(Bullet(*pos))
         
 
     # --- Game logic should go here
     
 
     
-
     # --- Drawing code should go here
     screen.fill(colors["WHITE"])
+    #draw player
     pygame.draw.circle(screen,(BLUE),(playerPos),50)
-    if(attacking):
-        target = pygame.mouse.get_pos()
-        currentPos =[playerPos]
-        pygame.draw.circle(screen,(colors["RED"]),(pygame.mouse.get_pos()),10)
-        attacking = False
-
-    '''
-    for i in range(len(enemyList)):
-        #drawing the snow
-        pygame.draw.circle(screen, BLACK, enemyList[i], 2)
-        drawEnemy(enemyList[i])
-        #move the snow flake down 5 pixel so it looks like it's falling
-
-        if(enemyList[i][0] < playerPosX):
-            enemyList[i][0]  += playerPosX/1000
-        elif(enemyList[i][0] > playerPosX):
-            enemyList[i][0]  -= playerPosX/1000
-        if(enemyList[i][1]  < playerPosY):
-            enemyList[i][1]  += playerPosY/1000
-        elif(enemyList[i][1]  > playerPosY):
-            enemyList[i][1]  -= playerPosY/1000
-    '''
-
+    #bullet code
+    for bullet in bullets:
+        bullet.draw(screen)
     
     # --- Go ahead and refresh the screen with what we've drawn.
     pygame.display.flip()
  
     # --- Limit to 60 frames per second
     clock.tick(60)
+    mousePos = pygame.mouse.get_pos()
  
 # Close the window and quit.
 pygame.quit()
