@@ -40,7 +40,7 @@ ball2Rect.y = random.randrange(0, screenHight-111)
 
 ballRectList = []
 ballSpeedList = []
-for i in range(5):
+for i in range(2):
     ballSpeedList.append([5,5])
     ballRect = ballSprite.get_rect()
     ballRect.x = random.randrange(0, screenWidth-111)
@@ -77,11 +77,29 @@ while going:
         ballleft = (ballRectList[i].left, ballRectList[i].y + 50)
         ballright = (ballRectList[i].right, ballRectList[i].y + 50)
         ballbottom = (ballRectList[i].x + 50, ballRectList[i].bottom)
-
-
-
-
-
+        for e in range(len(ballRectList)):
+            if(e != i):
+                balltopE = (ballRectList[e].x + 50, ballRectList[e].top)
+                ballleftE = (ballRectList[e].left, ballRectList[e].y + 50)
+                ballrightE = (ballRectList[e].right, ballRectList[e].y + 50)
+                ballbottomE = (ballRectList[e].x + 50, ballRectList[e].bottom)
+                if ballRectList[i].collidepoint(ballleftE):
+                    ballSpeedList[e][0] = -ballSpeedList[e][0]
+                if ballRectList[i].collidepoint(balltopE):
+                    ballSpeedList[e][1] = -ballSpeedList[e][1]
+                if ballRectList[i].collidepoint(ballrightE):
+                    ballSpeedList[e][0] = -ballSpeedList[e][0]
+                if ballRectList[i].collidepoint(ballbottomE):
+                    ballSpeedList[e][1] = -ballSpeedList[e][1]
+                
+                if ballRectList[e].collidepoint(ballleft):
+                    ballSpeedList[i][0] = -ballSpeedList[i][0]
+                if ballRectList[e].collidepoint(balltop):
+                    ballSpeedList[i][1] = -ballSpeedList[i][1]
+                if ballRectList[e].collidepoint(ballright):
+                    ballSpeedList[i][0] = -ballSpeedList[i][0]
+                if ballRectList[e].collidepoint(ballbottom):
+                    ballSpeedList[i][1] = -ballSpeedList[i][1]
         screen.blit(ballSprite, ballRectList[i])
 
 
