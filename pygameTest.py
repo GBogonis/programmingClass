@@ -1,4 +1,11 @@
-import pygame
+try:
+    import pygame
+    from pygame.locals import *
+    import random
+    import math
+except:
+    print("could not import pygame")
+    exit() 
 
 pygame.init()
 
@@ -11,6 +18,8 @@ BLUE = ( 0, 0, 255)
 size = (1000, 600)
 screen = pygame.display.set_mode(size)
 pygame.display.set_caption("gaming time")
+ballSprite = pygame.image.load("intro_ball.gif")
+ballRect = ballSprite.get_rect()
 
 circlePoseX = 360
 circlePoseY = 250
@@ -60,8 +69,9 @@ while not done:
     print('moonY:',moonY)
     print('moonX:',moonX)
     '''
+
     
-    pygame.draw.polygon(screen,BLACK,((200,100), (10,10), (10,200)),0)
+    #pygame.draw.polygon(screen,BLACK,((200,100), (10,10), (10,200)),0)
     # --- Go ahead and update the screen with what we've drawn.
     pygame.display.flip()
 

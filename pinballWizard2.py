@@ -29,27 +29,25 @@ pygame.display.set_caption("My Pygame")
 #https://pygame.readthedocs.io/en/latest/rect/rect.html
 # load ball image
 ballSprite = pygame.image.load("intro_ball.gif")
-ballListSpeed = []
-ballPos = []
-ballRect = []
-ball1pos = [random.randrange(0, screenWidth-111),random.randrange(0, screenHight-111)]
-ball2pos = [random.randrange(0, screenWidth-111),random.randrange(0, screenHight-111)]
 ball1Speed = [5,5]
 ball2Speed = [5,5]
 ball1Rect = ballSprite.get_rect()
-ball1RectTop = ballSprite.get_rect().midtop
-ball1RectBottom = ballSprite.get_rect().midbottom
-ball1RectLeft = ballSprite.get_rect().midleft
-ball1RectRight = ballSprite.get_rect().midright
-ball2RectTop = ballSprite.get_rect().midtop
-ball2RectBottom = ballSprite.get_rect().midbottom
-ball2RectLeft = ballSprite.get_rect().midleft
-ball2RectRight = ballSprite.get_rect().midright
-'''
-ballPos.append([random.randrange(0, screenWidth-111),random.randrange(0, screenHight-111)])
-ballListSpeed.append([5,5])
-ballRect.append(ballSprite.get_rect())
-''' 
+ball2Rect = ballSprite.get_rect()
+ball1Rect.x = random.randrange(0, screenWidth-111)
+ball1Rect.y = random.randrange(0, screenHight-111)
+ball2Rect.x = random.randrange(0, screenWidth-111)
+ball2Rect.y = random.randrange(0, screenHight-111)
+
+ballRectList = []
+ballSpeedList = []
+for i in range(5):
+    ballSpeedList.append([5,5])
+    ballRect = ballSprite.get_rect()
+    ballRect.x = random.randrange(0, screenWidth-111)
+    ballRect.y = random.randrange(0, screenHight-111)
+    ballRectList.append(ballRect)
+
+
 
 
 # Set variable to run loop until the user clicks the close button.
@@ -65,76 +63,107 @@ while going:
         if event.type == pygame.QUIT:
             going = False
  
-    # --- Game logic should go here
     screen.fill(colors["BLACK"]) # note we refill the screen w/ black every flip() so no ghost trails :)
-    #update with offset todo
-    ball1Rect.update()
-    #ball1Rect.move(ball1Speed[0],ball1Speed[1])
-    '''
-    #ball1pos[0] += ball1Speed[0]
-    ball1pos[1] += ball1Speed[1]
-    ball2pos[0] += ball2Speed[0]
-    ball2pos[1] += ball2Speed[1]
-    '''
-    screen.blit(ballSprite, (ball1pos))
-    screen.blit(ballSprite,(ball2pos))
-    print(ball1RectTop)
-    '''
-    #x
-    if ball1RectTop < 0 or ball1RectBottom > screenWidth-111: # uses the position of the ball to detect collision with screen surface with a offset to acount for the image size
-        ballListSpeed[0] = -ballListSpeed[0]
-    #y
-    if ball1RectLeft < 0 or ball1RectRight > screenHight-111:
-        ballListSpeed[1] = -ballListSpeed[1] # reverse vertical speed to stay on screen
-    '''
-
-
-    '''
-    for i in range(len(ballPos)):
-        ballPos[i][0] += ballListSpeed[i][0]
-        ballPos[i][1] += ballListSpeed[i][1]
-        screen.blit(ballSprite,(ballPos[i][0],ballPos[i][1]))
-        #border collision 
-        #x
-        if ballPos[i][0] < 0 or ballPos[i][0] > screenWidth-111: # uses the position of the ball to detect collision with screen surface with a offset to acount for the image size
-            ballListSpeed[i][0] = -ballListSpeed[i][0]
-        #y
-        if ballPos[i][1] < 0 or ballPos[i][1] > screenHight-111:
-            ballListSpeed[i][1] = -ballListSpeed[i][1] # reverse vertical speed to stay on screen
+    # --- Game logic should go here
+    for i in range(len(ballRectList)):
+        ballRectList[i] = ballRectList[i].move(ballSpeedList[i])
         
+        if ballRectList[i].left < 0 or ballRectList[i].right > screenWidth: # uses edges of ballRectList[i] surface to detect collision with screen surface
+            ballSpeedList[i][0] = -ballSpeedList[i][0] # reverse horizontal speed to stay on screen
+        if ballRectList[i].top < 0 or ballRectList[i].bottom > screenHight:
+            ballSpeedList[i][1] = -ballSpeedList[i][1] # reverse vertical speed to stay on screen
 
-        
-        #ball to ball collision
-        for e in range(len(ballPos)):
-            #iterating though ball list again for collision
-            #the purpose of 'e' is to be 'i' but it skips the ball we are already going through
-            #print('in loop')
-            if(i != e):
-                collide = pygame.Rect.colliderect(ballRect[i],ballRect[e])
-                if(pygame.Rect.colliderect(ballRect[i],ballRect[e])):
-                    print('collide')
-                else:
-                    print('not collide')
-                
-                #note: try this way
-                #https://www.geeksforgeeks.org/adding-collisions-using-pygame-rect-colliderect-in-pygame/?ref=rp
-                print('collision running')
-                balltop = (ballRect[e].x, ballRect[e].top)
-                ballleft = (ballRect[e].left, ballRect[e].y)
-                ballright = (ballRect[e].right, ballRect[e].y)
-                ballbottom = (ballRect[e].x, ballRect[e].bottom)
-                
-                # check collision
-                if ballRect[i].collidepoint(ballleft):
-                    ballListSpeed[i][0] = -ballListSpeed[i][0]
-                if ballRect[i].collidepoint(balltop):
-                    ballListSpeed[i][1] = -ballListSpeed[i][1]
-                if ballRect[i].collidepoint(ballright):
-                    ballListSpeed[i][0] = -ballListSpeed[i][0]
-                if ballRect[i].collidepoint(ballbottom):            
-                    ballListSpeed[i][1] = -ballListSpeed[i][1]
-                '''
-                
+        balltop = (ballRectList[i].x + 50, ballRectList[i].top)
+        ballleft = (ballRectList[i].left, ballRectList[i].y + 50)
+        ballright = (ballRectList[i].right, ballRectList[i].y + 50)
+        ballbottom = (ballRectList[i].x + 50, ballRectList[i].bottom)
+
+
+
+
+
+        screen.blit(ballSprite, ballRectList[i])
+
+
+    '''
+    ball1Rect = ball1Rect.move(ball1Speed)
+    if ball1Rect.left < 0 or ball1Rect.right > screenWidth: # uses edges of ball1Rect surface to detect collision with screen surface
+        ball1Speed[0] = -ball1Speed[0] # reverse horizontal speed to stay on screen
+    if ball1Rect.top < 0 or ball1Rect.bottom > screenHight:
+        ball1Speed[1] = -ball1Speed[1] # reverse vertical speed to stay on screen
+
+    ball2Rect = ball2Rect.move(ball2Speed)
+    if ball2Rect.left < 0 or ball2Rect.right > screenWidth: # uses edges of ball2Rect surface to detect collision with screen surface
+        ball2Speed[0] = -ball2Speed[0] # reverse horizontal speed to stay on screen
+    if ball2Rect.top < 0 or ball2Rect.bottom > screenHight:
+        ball2Speed[1] = -ball2Speed[1] # reverse vertical speed to stay on screen
+    
+    
+    ball1top = (ball1Rect.x + 50, ball1Rect.top)
+    ball1left = (ball1Rect.left, ball1Rect.y + 50)
+    ball1right = (ball1Rect.right, ball1Rect.y + 50)
+    ball1bottom = (ball1Rect.x + 50, ball1Rect.bottom)
+    
+    ball2top = (ball2Rect.x + 50, ball2Rect.top)
+    ball2left = (ball2Rect.left, ball2Rect.y + 50)
+    ball2right = (ball2Rect.right, ball2Rect.y + 50)
+    ball2bottom = (ball2Rect.x + 50, ball2Rect.bottom)
+    
+    
+    if ball1Rect.collidepoint(ball2left):
+        ball2Speed[0] = -ball2Speed[0]
+    if ball1Rect.collidepoint(ball2top):
+        ball2Speed[1] = -ball2Speed[1]
+    if ball1Rect.collidepoint(ball2right):
+        ball2Speed[0] = -ball2Speed[0]
+    if ball1Rect.collidepoint(ball2bottom):
+        ball2Speed[1] = -ball2Speed[1]
+    
+    if ball2Rect.collidepoint(ball1left):
+        ball1Speed[0] = -ball1Speed[0]
+    if ball2Rect.collidepoint(ball1top):
+        ball1Speed[1] = -ball1Speed[1]
+    if ball2Rect.collidepoint(ball1right):
+        ball1Speed[0] = -ball1Speed[0]
+    if ball2Rect.collidepoint(ball1bottom):
+        ball1Speed[1] = -ball1Speed[1]
+    '''
+    '''
+    collided = False
+    if ball1Rect.collidepoint(ball2left) and collided == False:
+        ball2Speed[0] = -ball2Speed[0]
+        collided = True
+    if ball1Rect.collidepoint(ball2top) and collided == False:
+        ball2Speed[1] = -ball2Speed[1]
+        collided = True
+    if ball1Rect.collidepoint(ball2right) and collided == False:
+        ball2Speed[0] = -ball2Speed[0]
+        collided = True
+    if ball1Rect.collidepoint(ball2bottom) and collided == False:
+        ball2Speed[1] = -ball2Speed[1]
+        collided = True
+    
+    if ball2Rect.collidepoint(ball1left) and collided == False:
+        ball1Speed[0] = -ball1Speed[0]
+        collided = True
+    if ball2Rect.collidepoint(ball1top) and collided == False:
+        ball1Speed[1] = -ball1Speed[1]
+        collided = True
+    if ball2Rect.collidepoint(ball1right) and collided == False:
+        ball1Speed[0] = -ball1Speed[0]
+        collided = True
+    if ball2Rect.collidepoint(ball1bottom) and collided == False:
+        ball1Speed[1] = -ball1Speed[1]
+        collided = True
+
+
+
+
+    '''
+    
+    #screen.blit(ballSprite, ball1Rect)
+    #screen.blit(ballSprite,ball2Rect)
+           
     pygame.display.flip()
  
     # --- Limit to 60 frames per second
