@@ -1,4 +1,5 @@
 #start
+#imports
 try:
     import pygame
     from pygame.locals import *
@@ -7,14 +8,10 @@ except:
     print("could not import pygame")
     exit() 
     
-# Define some colors
-BLACK = (0, 0, 0)
-WHITE = (255, 255, 255)
-GREEN = (0, 255, 0)
-RED = (255, 0, 0)
-BLUE = (0, 0, 255)
+#color dictionary because python doesn't have enums like java
 colors = {'BLACK':(0,0,0),"WHITE":(255, 255, 255),"GREEN":(0, 255, 0),"RED":(255, 0, 0),"BLUE":(0, 0, 255)}
  
+#pygame start
 pygame.init()
  
 # Set the width and height of the screen [width, height]
@@ -28,17 +25,23 @@ pygame.display.set_caption("My Pygame")
 
 # load ball image
 ballSprite = pygame.image.load("intro_ball.gif")
+#setup vars for balls
 ballRectList = []
 ballSpeedList = []
-for i in range(3):
+#'ballRealList is for when the balls get clicked we know they should be gone
+ballRealList = []
+#making a new set of vars for each ball and adding to the list
+for i in range(5):
     ballSpeedList.append([5,5])
     ballRect = ballSprite.get_rect()
     ballRect.x = random.randrange(0, screenWidth-111)
     ballRect.y = random.randrange(0, screenHight-111)
     ballRectList.append(ballRect)
+    ballRealList.append(True)
 
-
-
+#game vars
+score = 0
+font = pygame.font.Font('freesansbold.ttf', 32)
 
 # Set variable to run loop until the user clicks the close button.
 going = True
@@ -52,9 +55,15 @@ while going:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             going = False
+        if event.type == pygame.MOUSEBUTTONUP:
+            clicking = True
+        else:
+            clicking = False
  
-    screen.fill(colors["BLACK"]) # note we refill the screen w/ black every flip() so no ghost trails :)
+
     # --- Game logic should go here
+    screen.fill(colors["BLACK"])#reset the screen to avoid trails
+    #going though each ball in the ball list
     for i in range(len(ballRectList)):
         #moving the ball based on current speed values
         ballRectList[i] = ballRectList[i].move(ballSpeedList[i])
@@ -70,10 +79,11 @@ while going:
         ballleft = (ballRectList[i].left, ballRectList[i].y + 50)
         ballright = (ballRectList[i].right, ballRectList[i].y + 50)
         ballbottom = (ballRectList[i].x + 50, ballRectList[i].bottom)
+
         #iterating through each ball again to test collision
         for e in range(len(ballRectList)):
-            #e != i to avoid a ball colliding with itself
-            if(e != i):
+            #e != i to avoid a ball colliding with itself, and checking that both balls are real so we don't collide with nothing
+            if(e != i and (ballRealList[e] == True and ballRealList[i] == True)):
                 #second set of side vars for collision
                 balltopE = (ballRectList[e].x + 50, ballRectList[e].top)
                 ballleftE = (ballRectList[e].left, ballRectList[e].y + 50)
@@ -102,14 +112,40 @@ while going:
                     ballSpeedList[i][0] = -ballSpeedList[i][0]               
                 if ballRectList[e].collidepoint(ballbottom):
                     ballSpeedList[i][1] = -ballSpeedList[i][1]
-                    
         
-        screen.blit(ballSprite, ballRectList[i])
- 
-    pygame.display.flip()
+        if(clicking and (mousePos[0] >= ballleft[0] and mousePos[0] <= ballright[0]) and (mousePos[1] >= balltop[1] and mousePos[1] <= ballbottom[1])):
+            ballRealList[i] = False
+        
+        if(ballRealList[i]):
+            #adding the ball to the screen
+            screen.blit(ballSprite, ballRectList[i])
+    #score code
+    score = 0
+    #I had to do it this way to avoid 1 ball being scored many times
+    for i in ballRealList:
+        if(i == False):
+            score += 1
+    scoreText = font.render('Score:' + str(score), True, (255, 255, 255))
+
+    #endgame text, I made it a rect to center the text easily
+    winText = font.render("You win! Your score was:"+ str(score), True, (255, 255, 255))
+    winRect = winText.get_rect()
+    winRect.center = (screenWidth / 2, screenHight / 2)
+
+    #checking if the game is over
+    if True not in ballRealList:
+        screen.blit(winText,winRect)
+    else:
+        screen.blit(scoreText,(10,10))
+
+    pygame.display.flip()#update screen
+    mousePos = pygame.mouse.get_pos()
  
     # --- Limit to 60 frames per second
     clock.tick(60)
  
 # Close the window and quit.
 pygame.quit()
+
+#I wanted to do more with this but the collision took longer than expected and I'm still not entirely happy with it
+#there might have been a better way to do the collision but I'm already late with this project
