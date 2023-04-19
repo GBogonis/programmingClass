@@ -29,7 +29,7 @@ pygame.display.set_caption("My Pygame")
 
  
 # Set variable to run loop until the user clicks the close button.
-done = False
+going = True
  
 # Used to manage how fast the screen refreshes
 clock = pygame.time.Clock()
@@ -53,7 +53,7 @@ class Bullet:
             self.dir = (self.dir[0]/length, self.dir[1]/length)
         angle = math.degrees(math.atan2(-self.dir[1], self.dir[0]))
 
-        self.bullet = pygame.Surface((7, 2)).convert_alpha()
+        self.bullet = pygame.Surface((10, 5)).convert_alpha()
         self.bullet.fill(colors["RED"])
         self.bullet = pygame.transform.rotate(self.bullet, angle)
         self.speed = 2
@@ -66,16 +66,18 @@ class Bullet:
         bullet_rect = self.bullet.get_rect(center = self.pos)
         surf.blit(self.bullet, bullet_rect)  
 
+
 bullets = []
 pos = (250, 250)
 # -------- Main Program Loop -----------
-while not done:
+while going:
     # --- Main event to break loop when user quits
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
-            done = True
-        if event.type == pygame.MOUSEBUTTONDOWN:
-            bullets.append(Bullet(*pos))
+            going = False
+            print('quiting')
+        if event.type == pygame.MOUSEBUTTONUP:
+            bullets.append(Bullet(*playerPos))
         
 
     # --- Game logic should go here
@@ -84,12 +86,13 @@ while not done:
     
     # --- Drawing code should go here
     screen.fill(colors["WHITE"])
-    #draw player
-    pygame.draw.circle(screen,(BLUE),(playerPos),50)
+   
     #bullet code
     for bullet in bullets:
+        bullet.update()
         bullet.draw(screen)
-    
+    #draw player
+    pygame.draw.circle(screen,(BLUE),(playerPos),30)
     # --- Go ahead and refresh the screen with what we've drawn.
     pygame.display.flip()
  
@@ -98,4 +101,6 @@ while not done:
     mousePos = pygame.mouse.get_pos()
  
 # Close the window and quit.
+print('quit')
 pygame.quit()
+exit()
