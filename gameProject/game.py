@@ -2,7 +2,6 @@ try:
     import pygame
     from pygame.locals import *
     import random
-    import enemy
     import math
 except:
     print("could not import pygame")
@@ -47,6 +46,7 @@ class Bullet:
         mx, my = pygame.mouse.get_pos()
         self.dir = (mx - x, my - y)
         length = math.hypot(*self.dir)
+        self.bullet_rect = Rect
         if length == 0.0:
             self.dir = (0, -1)
         else:
@@ -54,21 +54,49 @@ class Bullet:
         angle = math.degrees(math.atan2(-self.dir[1], self.dir[0]))
 
         self.bullet = pygame.Surface((10, 5)).convert_alpha()
-        self.bullet.fill(colors["RED"])
+        self.bullet.fill(colors["BLACK"])
         self.bullet = pygame.transform.rotate(self.bullet, angle)
-        self.speed = 2
+        self.speed = 10
 
     def update(self):  
         self.pos = (self.pos[0]+self.dir[0]*self.speed, 
                     self.pos[1]+self.dir[1]*self.speed)
 
     def draw(self, surf):
-        bullet_rect = self.bullet.get_rect(center = self.pos)
-        surf.blit(self.bullet, bullet_rect)  
+        self.bullet_rect = self.bullet.get_rect(center = self.pos)
+        surf.blit(self.bullet, self.bullet_rect)  
 
+class Enemy:
+    def __init__(self, X, Y, rect):
+        self.enemyRect = rect
+        self.enemypos = (X, Y)
+        self.speed = 40
+        self.health = 10
+        self.alive = True
+    
+    def update(self, bulletList):
+        Xdif = (self.enemypos[0]-(screenWidth/2))/self.speed
+        Ydif = (self.enemypos[1]-(screenHight/2))/self.speed
+        self.enemypos = (self.enemypos[0]-Xdif, self.enemypos[1]-Ydif)
+        shots = self.enemyRect.collidelistall(bulletList)
+        damage = len(shots)
+        self.health -= damage
+        if(self.health <= 0):
+            self.alive = False
+
+    
+    def draw(self, surf):
+        if(self.alive):
+            self.enemyRect.center = (self.enemypos)
+            pygame.draw.ellipse(surf,colors["RED"],self.enemyRect)
+        
+
+    
 
 bullets = []
+
 pos = (250, 250)
+mEnemy = Enemy(0,0,Rect(200, 500, 50, 50))
 # -------- Main Program Loop -----------
 while going:
     # --- Main event to break loop when user quits
@@ -86,21 +114,25 @@ while going:
     
     # --- Drawing code should go here
     screen.fill(colors["WHITE"])
-   
+    bulletRectlist = []
     #bullet code
     for bullet in bullets:
         bullet.update()
         bullet.draw(screen)
+        bulletRectlist.append(bullet.bullet_rect)
+
+    mEnemy.update(bulletRectlist)
+    mEnemy.draw(screen)
+
     #draw player
     pygame.draw.circle(screen,(BLUE),(playerPos),30)
     # --- Go ahead and refresh the screen with what we've drawn.
     pygame.display.flip()
  
     # --- Limit to 60 frames per second
-    clock.tick(60)
+    clock.tick(30)
     mousePos = pygame.mouse.get_pos()
  
 # Close the window and quit.
 print('quit')
 pygame.quit()
-exit()
