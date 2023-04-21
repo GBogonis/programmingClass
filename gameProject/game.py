@@ -84,11 +84,15 @@ class Enemy:
         if(self.health <= 0):
             self.alive = False
 
-    
     def draw(self, surf):
         if(self.alive):
             self.enemyRect.center = (self.enemypos)
             pygame.draw.ellipse(surf,colors["RED"],self.enemyRect)
+
+class player:
+    def __init__(self,pos):
+        self.playerPos = pos
+
         
 
     
@@ -96,6 +100,10 @@ class Enemy:
 bullets = []
 
 pos = (250, 250)
+enemyList = []
+for i in range(5):
+    
+    enemyList.append(Enemy())
 mEnemy = Enemy(0,0,Rect(200, 500, 50, 50))
 # -------- Main Program Loop -----------
 while going:
