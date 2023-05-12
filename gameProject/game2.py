@@ -87,7 +87,7 @@ class Enemy:
     def setSpeed(self, newSpeed):
         self.speed = newSpeed
     
-    def update(self, bulletList):
+    def update(self, bulletList,moveHor, moveVer):
         Xdif = (self.enemypos[0]-(screenWidth/2))
         Ydif = (self.enemypos[1]-(screenHight/2))
 
@@ -100,6 +100,19 @@ class Enemy:
             self.setDir()
         if(Ydif <-25 and self.enemydir[1]<0):
             self.setDir()
+
+        if(moveHor == 1):
+            print('right')
+            self.enemypos = (self.enemypos[0]-10,self.enemypos[1])
+        if(moveHor == -1):
+            print('left')
+            self.enemypos = (self.enemypos[0]+10,self.enemypos[1])
+        if(moveVer == 1):
+            print('down')
+            self.enemypos = (self.enemypos[0],self.enemypos[1]-10)
+        if(moveVer == -1):
+            print('up')
+            self.enemypos = (self.enemypos[0],self.enemypos[1]+10)
         
         #moving the enemy
         self.enemypos = (self.enemypos[0]+self.enemydir[0]*self.speed, 
@@ -154,53 +167,67 @@ def spawnEnemies(num):
     for i in range(num):
         ranX = random.randrange(0,screenWidth)
         ranY = random.randrange(0,screenHight)
+        '''
         if(ranX > 50 and ranX < screenWidth-50):
             if(random.random() == 1):
                 ranY = 0
             else:
                 ranY = screenHight
+        '''
         enemyList.append(Enemy(ranX,ranY,Rect(200, 500, 50, 50)))
 
 spawnEnemies(5)
-movingUp = False
+shooting = False
 # -------- Main Program Loop -----------
 while going:
     # --- Main event to break loop when user quits
     move_ticker = 0
+    move_ticker2 = 0
+
+    mouseTicker = 0
+
+    mouseUp = 0
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             going = False
-        if event.type == pygame.MOUSEBUTTONUP:
+        if event.type == pygame.MOUSEBUTTONDOWN:  
+            shooting = True
+        elif event.type == pygame.MOUSEBUTTONUP:
+            shooting = False
+            
+    
+    if(shooting):
+        if mouseTicker == 0:
+            mouseTicker = 10
             bullets.append(Bullet(*mPlayer.playerPos))
-        '''
-        if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_w:
-                movingUp = True
-        else:
-            movingUp = False
-        '''
+
     location = 0
+    location2 = 0
     keys=pygame.key.get_pressed()
-    if keys[K_LEFT]:
+    if keys[K_a]:
         if move_ticker == 0:
             move_ticker = 10
-            location -= 1
-            if location == -1:
-                location = 0
-    if keys[K_RIGHT]:
+            location-=1
+    if keys[K_d]:
         if move_ticker == 0:   
             move_ticker = 10     
             location+=1
-            if location == 5:
-                location = 4
-    
-    if(location == 1):
-        print('left')
-    elif(location == -1):
-        print('right')
+    if keys[K_w]:
+        if move_ticker2 == 0:
+            move_ticker2 = 10
+            location2 -= 1
+    if keys[K_s]:
+        if move_ticker2 == 0:   
+            move_ticker2 = 10     
+            location2+=1
 
+    if move_ticker2 > 0:
+        move_ticker2 -= 1
     if move_ticker > 0:
         move_ticker -= 1
+    if mouseTicker > 0:
+        mouseTicker -= 100
+
     #main game code
     screen.fill(colors["WHITE"])
     bulletRectlist = []
@@ -222,7 +249,7 @@ while going:
         enemyAliveList = []
         for enemy in enemyList:
             enemy.setSpeed(roundNum)
-            enemy.update(bulletRectlist)
+            enemy.update(bulletRectlist,location,location2)
             enemy.draw(screen)
             enemyAliveList.append(enemy.getAlive())
             enemyRectList.append(enemy.enemyRect)
@@ -230,6 +257,8 @@ while going:
 
         
         if True not in enemyAliveList:
+            bullets.clear()
+            enemyList.clear()
             roundNum += 1
             spawnEnemies(4+roundNum)
             mPlayer.HP += 50

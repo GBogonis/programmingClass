@@ -8,7 +8,7 @@ except:
     exit() 
     
 # Define some colors
-colors = {'BLACK':(0,0,0),"WHITE":(255, 255, 255),"GREEN":(0, 255, 0),"RED":(255, 0, 0),"BLUE":(0, 0, 255)}
+colors = {'BLACK':(0,0,0),"WHITE":(255, 255, 255),"GREEN":(0, 255, 0),"RED":(255, 0, 0),"BLUE":(0, 0, 255),"GRAY":(100,100,100)}
  
 pygame.init()
  
@@ -148,7 +148,7 @@ class player:
 #game vars
 bullets = []
 enemyList = []
-attacking = False
+shooting = False
 roundNum = 1
 font = pygame.font.Font('freesansbold.ttf', 32)
 #only player object, the 'm' is a naming convention from java that I picked up
@@ -160,11 +160,6 @@ def spawnEnemies(num):
     for i in range(num):
         ranX = random.randrange(0,screenWidth)
         ranY = random.randrange(0,screenHight)
-        if(ranX > 50 and ranX < screenWidth-50):
-            if(random.random() == 1):
-                ranY = 0
-            else:
-                ranY = screenHight
         enemyList.append(Enemy(ranX,ranY,Rect(200, 500, 50, 50)))
 
 #inital enemy spawn
@@ -172,13 +167,49 @@ spawnEnemies(5)
 
 # -------- Main Program Loop -----------
 while going:
+
+    horMovementTicker = 0
+    verMovementTicker =0
     # --- Main event to break loop when user quits
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             going = False
-        if event.type == pygame.MOUSEBUTTONUP:
-            #is the player clicking the mouse to fire a bullet? add it to the list
-            bullets.append(Bullet(*mPlayer.playerPos))
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            #if player is holding down the shoot button, shooting = true
+            shooting = True
+        elif event.type == pygame.MOUSEBUTTONUP:
+            shooting = False
+    
+    #if we are shooting, fire a bullet!
+    if(shooting):
+        bullets.append(Bullet(*mPlayer.playerPos))
+
+
+    horMovement = 0
+    verMovement = 0
+    keys=pygame.key.get_pressed()
+    if keys[K_a]:
+        if horMovementTicker == 0:
+            horMovementTicker = 10
+            horMovement-=1
+    if keys[K_d]:
+        if horMovementTicker == 0:   
+            horMovementTicker = 10     
+            horMovement+=1
+    if keys[K_w]:
+        if verMovementTicker == 0:
+            verMovementTicker = 10
+            verMovement -= 1
+    if keys[K_s]:
+        if verMovementTicker == 0:   
+            verMovementTicker = 10     
+            verMovement+=1
+
+    if verMovementTicker > 0:
+        verMovementTicker -= 1
+    if horMovementTicker > 0:
+        horMovementTicker -= 1
+
    
     #main game code
     screen.fill(colors["WHITE"])
@@ -218,7 +249,6 @@ while going:
         mPlayer.draw(screen)
     else:
         #if the game is over, display ending text
-
         endText1 = font.render("Game over!", True, (0, 0, 0))
         endRect1 = endText1.get_rect()
         endRect1.center = (screenWidth / 2, screenHight / 2)
