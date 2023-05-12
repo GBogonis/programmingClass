@@ -89,19 +89,19 @@ class Enemy:
     def setSpeed(self, newSpeed):
         self.speed = newSpeed
     
-    def update(self, bulletList):
-        Xdif = (self.enemypos[0]-(screenWidth/2))
-        Ydif = (self.enemypos[1]-(screenHight/2))
+    def update(self, bulletList,moveHor, moveVer):
+        #keeping the enemies always moving towards the player
+        self.setDir()
 
-        #I could just call "setDir()" all the time but I like the movement better this way
-        if(Xdif >25 and self.enemydir[0]>0):
-            self.setDir()
-        if(Ydif >25 and self.enemydir[1]>0):
-            self.setDir()
-        if(Xdif <-25 and self.enemydir[0]<0):
-            self.setDir()
-        if(Ydif <-25 and self.enemydir[1]<0):
-            self.setDir()
+        #When the player "moves", it acually just moves the enemies to give the illusion of movement while keeping the player at the center of the screen
+        if(moveHor == 1):
+            self.enemypos = (self.enemypos[0]-10,self.enemypos[1])
+        if(moveHor == -1):
+            self.enemypos = (self.enemypos[0]+10,self.enemypos[1])
+        if(moveVer == 1):
+            self.enemypos = (self.enemypos[0],self.enemypos[1]-10)
+        if(moveVer == -1):
+            self.enemypos = (self.enemypos[0],self.enemypos[1]+10)
         
         #moving the enemy
         self.enemypos = (self.enemypos[0]+self.enemydir[0]*self.speed, 
@@ -144,7 +144,6 @@ class player:
         self.playerRect.center = (self.playerPos)
         pygame.draw.ellipse(surf,colors["BLUE"],self.playerRect)
 
-
 #game vars
 bullets = []
 enemyList = []
@@ -167,9 +166,6 @@ spawnEnemies(5)
 
 # -------- Main Program Loop -----------
 while going:
-
-    horMovementTicker = 0
-    verMovementTicker =0
     # --- Main event to break loop when user quits
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -184,9 +180,11 @@ while going:
     if(shooting):
         bullets.append(Bullet(*mPlayer.playerPos))
 
-
+    #horizontal and vertical movement
     horMovement = 0
     verMovement = 0
+    horMovementTicker = 0
+    verMovementTicker =0
     keys=pygame.key.get_pressed()
     if keys[K_a]:
         if horMovementTicker == 0:
@@ -205,6 +203,7 @@ while going:
             verMovementTicker = 10     
             verMovement+=1
 
+    #the purpose of the "ticker" stuff is to limit the movement allowed per frame
     if verMovementTicker > 0:
         verMovementTicker -= 1
     if horMovementTicker > 0:
@@ -233,13 +232,16 @@ while going:
         enemyAliveList = []
         for enemy in enemyList:
             enemy.setSpeed(roundNum)
-            enemy.update(bulletRectlist)
+            enemy.update(bulletRectlist,horMovement,verMovement)
             enemy.draw(screen)
             enemyAliveList.append(enemy.getAlive())
             enemyRectList.append(enemy.enemyRect)
 
         #if all the enemies are dead, start next round
         if True not in enemyAliveList:
+            #clearing lists to prevent lag and improve preformance
+            bullets.clear()
+            enemyList.clear()
             roundNum += 1
             spawnEnemies(4+roundNum)
             mPlayer.HP += 50
@@ -270,3 +272,5 @@ while going:
 pygame.quit()
 
 #note, I did want to add sounds and a background and other stuff but I was too focused on the game design parts and even so I didn't get all the features that I wanted
+#I also understand that this is not the most efficent or easist way to do this but I didn't know of the sprite class before making this
+#assuming I am allowed, I'm probably going to continue working on this as my last project.
