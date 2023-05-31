@@ -15,12 +15,12 @@ pygame.init()
  
 #256 × 240 pixels
 # Set the width and height of the screen [width, height]
-screenHight = 7*100
-screenWidth = 8*100
+screenHight = 36*25
+screenWidth = 28*25
 size = (screenWidth, screenHight)
 screen = pygame.display.set_mode(size)
 
-pygame.display.set_caption("My Pygame")
+pygame.display.set_caption("PacMan")
  
 # Set variable to run loop until the user clicks the close button.
 going = True
@@ -30,17 +30,15 @@ clock = pygame.time.Clock()
  
 
 class Player(pygame.sprite.Sprite):
-    """ This class represents the bar at the bottom that the player
-    controls. """
- 
     # Constructor function
     def __init__(self, x, y):
         # Call the parent's constructor
         super().__init__()
  
         # Set height, width
-        self.image = pygame.Surface([15, 15])
-        self.image.fill(colors["BLACK"])
+        self.image = pygame.Surface([25, 25])
+
+        self.image.fill(colors["RED"])
  
         # Make our top-left corner the passed-in location.
         self.rect = self.image.get_rect()
@@ -54,8 +52,8 @@ class Player(pygame.sprite.Sprite):
  
     def changespeed(self, x, y):
         """ Change the speed of the player. """
-        self.change_x += x
-        self.change_y += y
+        self.change_x = x
+        self.change_y = y
  
     def update(self):
         """ Update the player position. """
@@ -86,7 +84,6 @@ class Player(pygame.sprite.Sprite):
             else:
                 self.rect.top = block.rect.bottom
 
-
 class Wall(pygame.sprite.Sprite):
     """ Wall the player can run into. """
     def __init__(self, x, y, width, height):
@@ -112,27 +109,70 @@ all_sprite_list = pygame.sprite.Group()
 wall_list = pygame.sprite.Group()
  
 #walls
-
-#left wall
-wall = Wall(0, 0, 50, screenHight)
+widthUnit=15
+PosUnit=25
+#left wall 1
+wall = Wall(0, 75, 25, 250)
 wall_list.add(wall)
 all_sprite_list.add(wall)
- 
+
+#right wall 2
+wall = Wall(screenWidth-25, 75, 25, 250)
+wall_list.add(wall)
+all_sprite_list.add(wall)
+
+#left tunnel
+wall = Wall(0, 25*17, 25*6, 25)
+wall_list.add(wall)
+all_sprite_list.add(wall)
+
+wall = Wall(0, 25*19, 25*6, 25)
+wall_list.add(wall)
+all_sprite_list.add(wall)
+
+wall = Wall(0, 25*13, 25*6, 25)
+wall_list.add(wall)
+all_sprite_list.add(wall)
+
+wall = Wall(0, 25*23, 25*6, 25)
+wall_list.add(wall)
+all_sprite_list.add(wall)
+
+wall = Wall(25*5, 25*13, 25, 25*5)
+wall_list.add(wall)
+all_sprite_list.add(wall)
+
+wall = Wall(25*5, 25*19, 25, 25*5)
+wall_list.add(wall)
+all_sprite_list.add(wall)
+
+#left wall 2
+wall = Wall(0, 23*25, 25, 300)
+wall_list.add(wall)
+all_sprite_list.add(wall)
+
+#right wall 2
+wall = Wall(screenWidth-25, 22*25, 25, 300)
+wall_list.add(wall)
+all_sprite_list.add(wall)
+
 #top wall
-wall = Wall(10, 0, screenWidth, 50)
+wall = Wall(0, 75, screenWidth, 25)
 wall_list.add(wall)
 all_sprite_list.add(wall)
- 
 
-wall = Wall(50, 100, 50, 50)
+#bottom wall
+wall = Wall(0, screenHight-75, screenWidth, 25)
 wall_list.add(wall)
 all_sprite_list.add(wall)
- 
 
+
+
+ 
 
 
 # Create the player paddle object
-player = Player(50, 50)
+player = Player(screenWidth/2, screenHight/2)
 player.walls = wall_list
 
 all_sprite_list.add(player)
@@ -148,26 +188,16 @@ while going:
         elif event.type == pygame.KEYDOWN:
             if event.key == pygame.K_LEFT:
                 player.changespeed(-3, 0)
-            elif event.key == pygame.K_RIGHT:
+            if event.key == pygame.K_RIGHT:
                 player.changespeed(3, 0)
-            elif event.key == pygame.K_UP:
+            if event.key == pygame.K_UP:
                 player.changespeed(0, -3)
-            elif event.key == pygame.K_DOWN:
+            if event.key == pygame.K_DOWN:
                 player.changespeed(0, 3)
- 
-        elif event.type == pygame.KEYUP:
-            if event.key == pygame.K_LEFT:
-                player.changespeed(3, 0)
-            elif event.key == pygame.K_RIGHT:
-                player.changespeed(-3, 0)
-            elif event.key == pygame.K_UP:
-                player.changespeed(0, 3)
-            elif event.key == pygame.K_DOWN:
-                player.changespeed(0, -3)
- 
+
     all_sprite_list.update()
  
-    screen.fill(colors["WHITE"])
+    screen.fill(colors["BLACK"])
  
     all_sprite_list.draw(screen)
  
