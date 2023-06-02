@@ -84,95 +84,46 @@ class Player(pygame.sprite.Sprite):
             else:
                 self.rect.top = block.rect.bottom
 
+
+
 class Wall(pygame.sprite.Sprite):
     """ Wall the player can run into. """
-    def __init__(self, x, y, width, height):
+    def __init__(self, x, y):
         """ Constructor for the wall that the player can run into. """
         # Call the parent's constructor
         super().__init__()
  
         # Make a blue wall, of the size specified in the parameters
-        self.image = pygame.Surface([width, height])
+        self.image = pygame.Surface([25, 25])
         self.image.fill(colors["BLUE"])
  
         # Make our top-left corner the passed-in location.
         self.rect = self.image.get_rect()
         self.rect.y = y
         self.rect.x = x
- 
-
-
 # List to hold all the sprites
 all_sprite_list = pygame.sprite.Group()
  
 # Make the walls. (x_pos, y_pos, width, height)
 wall_list = pygame.sprite.Group()
+
+
+levelText = open(r'c:\Users\George.Bogonis\Documents\GitHub\programmingClass\gameProject2\level.txt','r')
+
+currentRow = 0
+currentBlock = 0
+for row in levelText:
+ currentBlock = 0
+ currentRow +=1
+ for block in row:
+    if(block == 'w'):
+        wall = Wall(currentBlock*25,currentRow*25)
+        wall_list.add(wall)
+        all_sprite_list.add(wall)
+    currentBlock +=1
  
-#walls
-widthUnit=15
-PosUnit=25
-#left wall 1
-wall = Wall(0, 75, 25, 250)
-wall_list.add(wall)
-all_sprite_list.add(wall)
-
-#right wall 2
-wall = Wall(screenWidth-25, 75, 25, 250)
-wall_list.add(wall)
-all_sprite_list.add(wall)
-
-#left tunnel
-wall = Wall(0, 25*17, 25*6, 25)
-wall_list.add(wall)
-all_sprite_list.add(wall)
-
-wall = Wall(0, 25*19, 25*6, 25)
-wall_list.add(wall)
-all_sprite_list.add(wall)
-
-wall = Wall(0, 25*13, 25*6, 25)
-wall_list.add(wall)
-all_sprite_list.add(wall)
-
-wall = Wall(0, 25*23, 25*6, 25)
-wall_list.add(wall)
-all_sprite_list.add(wall)
-
-wall = Wall(25*5, 25*13, 25, 25*5)
-wall_list.add(wall)
-all_sprite_list.add(wall)
-
-wall = Wall(25*5, 25*19, 25, 25*5)
-wall_list.add(wall)
-all_sprite_list.add(wall)
-
-#left wall 2
-wall = Wall(0, 23*25, 25, 300)
-wall_list.add(wall)
-all_sprite_list.add(wall)
-
-#right wall 2
-wall = Wall(screenWidth-25, 22*25, 25, 300)
-wall_list.add(wall)
-all_sprite_list.add(wall)
-
-#top wall
-wall = Wall(0, 75, screenWidth, 25)
-wall_list.add(wall)
-all_sprite_list.add(wall)
-
-#bottom wall
-wall = Wall(0, screenHight-75, screenWidth, 25)
-wall_list.add(wall)
-all_sprite_list.add(wall)
-
-
-
- 
-
-
 # Create the player paddle object
-player = Player(screenWidth/2, screenHight/2)
+player = Player(screenWidth/2, (25*27)-10)
 player.walls = wall_list
 
 all_sprite_list.add(player)
