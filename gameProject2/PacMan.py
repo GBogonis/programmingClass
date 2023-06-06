@@ -51,6 +51,7 @@ class Player(pygame.sprite.Sprite):
         self.change_y = 0
         self.walls = None
         self.dots = None
+        self.powers = None
         global score 
         score = 0
         
@@ -70,6 +71,7 @@ class Player(pygame.sprite.Sprite):
         block_hit_list = pygame.sprite.spritecollide(self, self.walls, False)
 
         dot_hit_list = pygame.sprite.spritecollide(self, self.dots, True)
+        power_hit_list = pygame.sprite.spritecollide(self, self.powers, True)
 
         for block in block_hit_list:
             # If we are moving right, set our right side to the left side of
@@ -98,9 +100,12 @@ class Player(pygame.sprite.Sprite):
         if(self.rect.x < 0):
             self.rect.x = screenWidth-10
         for dot in dot_hit_list:
-
             dot_hit_list.remove(dot)
             score += 100
+        for power in power_hit_list:
+            power_hit_list.remove(power)
+            score += 1000
+
 
 class Wall(pygame.sprite.Sprite):
     """ Wall the player can run into. """
@@ -134,12 +139,41 @@ class Dot(pygame.sprite.Sprite):
         self.rect.y = y
         self.rect.x = x
 
+class Power(pygame.sprite.Sprite):
+    """ Wall the player can run into. """
+    def __init__(self, x, y):
+        """ Constructor for the wall that the player can run into. """
+        # Call the parent's constructor
+        super().__init__()
+ 
+        # Make a blue wall, of the size specified in the parameters
+        self.image = pygame.Surface([15, 15])
+        self.image.fill(colors["WHITE"])
+ 
+        # Make our top-left corner the passed-in location.
+        self.rect = self.image.get_rect()
+        self.rect.y = y
+        self.rect.x = x
+
+
+
+class Ghost(pygame.sprite.Sprite):
+    def __init__(self,color):
+        super.__init__()
+
+        self.image = pygame.surface([20,20])
+        self.image.fill(colors[color])
+        self.rect = self.image.get_rect()
+        self.rect.y = screenHight/2
+        self.rect.x = screenWidth/2
+
+
 # List to hold all the sprites
 all_sprite_list = pygame.sprite.Group()
  
 # Make the walls. (x_pos, y_pos, width, height)
 wall_list = pygame.sprite.Group()
-
+power_list = pygame.sprite.Group()
 dot_list = pygame.sprite.Group()
 
 
@@ -159,13 +193,19 @@ for row in levelText:
         dot = Dot((currentBlock*25)+7,(currentRow*25)+7)
         dot_list.add(dot)
         all_sprite_list.add(dot)
+    if(block == 'p'):
+        power = Power(currentBlock*25+5,currentRow*25+5)
+        power_list.add(power)
+        all_sprite_list.add(power)
     currentBlock +=1
  
 # Create the player paddle object
 player = Player(screenWidth/2, (25*27))
 player.walls = wall_list
 player.dots = dot_list
+player.powers = power_list
 all_sprite_list.add(player)
+font = pygame.font.Font('freesansbold.ttf', 32)
 # -------- Main Program Loop -----------
 going = True
  
@@ -190,7 +230,9 @@ while going:
     screen.fill(colors["BLACK"])
  
     all_sprite_list.draw(screen)
- 
+    
+    scoreText = font.render('Score: ' + str(score),True, (0, 0, 0))
+
     pygame.display.flip()
  
     clock.tick(30)
