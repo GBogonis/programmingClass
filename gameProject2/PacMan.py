@@ -36,15 +36,21 @@ class Player(pygame.sprite.Sprite):
         super().__init__()
  
         # Set height, width
-        self.image = pygame.Surface([20, 20])
+        self.image = pygame.Surface([20,20])
 
-        self.image.fill(colors["YELLOW"])
- 
+        
         # Make our top-left corner the passed-in location.
         self.rect = self.image.get_rect()
         self.rect.y = y
         self.rect.x = x
+        #centerx is just to get the spawn position where I want it
         self.rect.centerx = x
+
+
+        self.image.fill(colors["YELLOW"])
+ 
+        self.powerupTimer = 0
+        
         # Set speed vector
         self.change_x = 0
         self.change_y = 0
@@ -56,44 +62,47 @@ class Player(pygame.sprite.Sprite):
         
  
     def changespeed(self, x, y):
-        """ Change the speed of the player. """
+        #set player speed
         self.change_x = x
         self.change_y = y
  
     def update(self):
         global score 
-        """ Update the player position. """
-        # Move left/right
+        if(self.powerupTimer > 0):
+            #self.change_x *= 1.2
+            #self.change_y *= 1.2
+            self.powerupTimer -= 1
+
+        #moving the player
         self.rect.x += self.change_x
  
-        # Did this update cause us to hit a wall?
+        #checking collision with any objects after the movement
         block_hit_list = pygame.sprite.spritecollide(self, self.walls, False)
-
         dot_hit_list = pygame.sprite.spritecollide(self, self.dots, True)
         power_hit_list = pygame.sprite.spritecollide(self, self.powers, True)
 
         for block in block_hit_list:
-            # If we are moving right, set our right side to the left side of
-            # the item we hit
+            #if we hit a wall, then be next to it not inside it
             if self.change_x > 0:
                 self.rect.right = block.rect.left
             else:
-                # Otherwise if we are moving left, do the opposite.
+                #same thing but other side
                 self.rect.left = block.rect.right
  
-        # Move up/down
+        #virtical change
         self.rect.y += self.change_y
  
-        # Check and see if we hit anything
+        #check if we hit any object after our second move
         block_hit_list = pygame.sprite.spritecollide(self, self.walls, False)
         for block in block_hit_list:
  
-            # Reset our position based on the top/bottom of the object.
+            #same thing as before, if we hit a wall then don't do that
             if self.change_y > 0:
                 self.rect.bottom = block.rect.top
             else:
                 self.rect.top = block.rect.bottom
 
+        #if we made it out of the map, move to the other side, this will only happen when we go into the tunnle
         if(self.rect.x >screenWidth):
             self.rect.x = 10
         if(self.rect.x < 0):
@@ -105,6 +114,7 @@ class Player(pygame.sprite.Sprite):
             score += 100
         for power in power_hit_list:
             power_hit_list.remove(power)
+            self.powerupTimer = 50
             score += 1000
 
 
@@ -177,13 +187,15 @@ for row in levelText:
     if(block == 'w'):
         mapElement = mapObject('w',currentBlock*25,currentRow*25)
         wall_list.add(mapElement)
+        all_sprite_list.add(mapElement)
     if(block == "d"):
         mapElement = mapObject('d',(currentBlock*25)+7,(currentRow*25)+7)
         dot_list.add(mapElement)
+        all_sprite_list.add(mapElement)
     if(block == 'p'):
         mapElement = mapObject('p',currentBlock*25+5,currentRow*25+5)
         power_list.add(mapElement)
-    all_sprite_list.add(mapElement)
+        all_sprite_list.add(mapElement)
     currentBlock +=1
  
 #making the (only) player object and setting the vars 
@@ -195,6 +207,9 @@ all_sprite_list.add(player)
 
 #font for score text 
 textFont = pygame.font.Font('freesansbold.ttf', 32)
+
+#time keeping
+secondsLeft = 3000
 # -------- Main Program Loop -----------
 going = True
  
@@ -205,14 +220,27 @@ while going:
             going = False
             #movement keys for the player
         elif event.type == pygame.KEYDOWN:
+            #if, no active powerup than normal speed, else than super speed
             if event.key == pygame.K_LEFT:
-                player.changespeed(-5, 0)
+                if(player.powerupTimer > 0):
+                    player.changespeed(-7, 0)
+                else:
+                    player.changespeed(-5, 0)
             if event.key == pygame.K_RIGHT:
-                player.changespeed(5, 0)
+                if(player.powerupTimer > 0):
+                    player.changespeed(7, 0)
+                else:
+                    player.changespeed(5, 0)
             if event.key == pygame.K_UP:
-                player.changespeed(0, -5)
+                if(player.powerupTimer > 0):
+                    player.changespeed(0, -7)
+                else:
+                    player.changespeed(0, -5)
             if event.key == pygame.K_DOWN:
-                player.changespeed(0, 5)
+                if(player.powerupTimer > 0):
+                    player.changespeed(0, 5)
+                else:
+                    player.changespeed(0,7)
 
     #updating all sprites 
     all_sprite_list.update()
@@ -222,15 +250,39 @@ while going:
  
     #drawing all sprites 
     all_sprite_list.draw(screen)
-    
-    #score text setup
-    scoreText = textFont.render('Score: ' + str(score),True, (255, 255, 255))
-    scoreTextRect = scoreText.get_rect()
-    screen.blit(scoreText, (10.10))
+    if(secondsLeft > 0 and len(dot_list) != 0 and len(power_list) != 0):
+        #you have time and dots left, game is going
+        #score text setup
+        scoreText = textFont.render('Score: ' + str(score),True, (255, 255, 255))
+        scoreTextRect = scoreText.get_rect()
+        screen.blit(scoreText, (10,10))
+
+        timeText = textFont.render('Time left: ',True, (255, 255, 255))
+        timeText2 = textFont.render(str(secondsLeft),True,(255, 255, 255))
+        timeTextRect = timeText.get_rect()
+        screen.blit(timeText, (25*11,25*17))
+        screen.blit(timeText2, (25*13-10,25*19-2))
+        #updating the timer, only if the game is going
+        secondsLeft -= 1
+    elif(len(dot_list) == 0 and len(power_list) == 0 and secondsLeft > 0):
+        #if you have no dots or powerups left and you have time left, you win
+        timeText = textFont.render('You',True, (255, 255, 255))
+        timeText2 = textFont.render('Win',True,(255, 255, 255))
+        timeTextRect = timeText.get_rect()
+        screen.blit(timeText, (25*11,25*17))
+        screen.blit(timeText2, (25*14-10,25*19-2))
+    else:
+        #game over text
+        timeText = textFont.render('Game',True, (255, 255, 255))
+        timeText2 = textFont.render('Over',True,(255, 255, 255))
+        timeTextRect = timeText.get_rect()
+        screen.blit(timeText, (25*11,25*17))
+        screen.blit(timeText2, (25*14-10,25*19-2))
+
 
     #updating screen stuff
     pygame.display.flip()
- 
+    print(secondsLeft)
     clock.tick(30)
  
 pygame.quit()
