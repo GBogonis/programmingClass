@@ -1,10 +1,12 @@
 #test
 #from ctypes.wintypes import PINT
-import time
-import random
-import csv
-import pygame
-
+try:
+    import time
+    import random
+    import csv
+    import pygame
+except:
+    print('')
 '''
 numm = input('pick a number\n')
 numm = int(numm)
@@ -193,3 +195,5 @@ for numm in range(int(numm),0,-1):
 
 def testThing():
     print('test')
+
+print('hello world')
