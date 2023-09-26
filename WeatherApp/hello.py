@@ -1,11 +1,14 @@
 from flask import Flask
 from flask import render_template
-#template = open('test.HTML')
+from jinja2 import Template
 
 app = Flask(__name__)
+
+temp = 62
+
 
 @app.route("/")
 
 def hello_world():
-    
-    return render_template('hello.html')
+    context = {'temprature' : temp}
+    return render_template('hello.html', **context)

@@ -166,7 +166,7 @@ power_list = pygame.sprite.Group()
 dot_list = pygame.sprite.Group()
 
 
-levelText = open(r'c:\Users\George.Bogonis\Documents\GitHub\programmingClass\gameProject2\level.txt','r')
+levelText = open(r'C:\Users\George.Bogonis\Documents\GitHub\programmingClass\sem2\gameProject2\level.txt')
 
 #level constructor:
 #I have a text file where I lay out the map by using characters (w = wall, d = dot, p = powerup)
