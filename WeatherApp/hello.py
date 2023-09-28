@@ -12,3 +12,13 @@ temp = 62
 def hello_world():
     context = {'temprature' : temp}
     return render_template('hello.html', **context)
+
+@app.route("/about")
+
+def about():
+    return render_template('about.html')
+
+@app.route("/machineLearning")
+
+def machineLearning():
+    return render_template('machineLearning.html')
