@@ -24,9 +24,11 @@ def hello_world():
 @app.route("/about")
 
 def about():
-    return render_template('about.html')
+    context = {'funnyMessage' : funnyMessage}
+    return render_template('about.html', **context)
 
 @app.route("/machineLearning")
 
 def machineLearning():
-    return render_template('machineLearning.html')
+    context = {'funnyMessage' : funnyMessage}
+    return render_template('machineLearning.html', **context)
