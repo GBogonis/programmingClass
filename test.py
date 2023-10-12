@@ -5,8 +5,14 @@ try:
     import random
     import csv
     import pygame
+    import requests
 except:
     print('')
+    
+    
+data = requests.get("https://api.openweathermap.org/data/2.5/weather?lat={42.82642299955682}&lon={-71.57923160207767}&appid={15dfa1324b44123c1634401424dd71a1}")
+print(data.status_code)    
+    
 '''
 numm = input('pick a number\n')
 numm = int(numm)
@@ -196,4 +202,4 @@ for numm in range(int(numm),0,-1):
 def testThing():
     print('test')
 
-print('hello world')
+#print('hello world')
