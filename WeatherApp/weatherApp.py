@@ -7,7 +7,7 @@ app = Flask(__name__)
 
 #Lat and long
 #42.82642299955682, -71.57923160207767
-data = requests.get("https://api.openweathermap.org/data/2.5/weather?lat={42.82642299955682}&lon={-71.57923160207767}&appid={15dfa1324b44123c1634401424dd71a1}")
+data = requests.get("https://api.openweathermap.org/data/2.5/weather?lat=42.82642299955682&lon=-71.57923160207767&appid={15dfa1324b44123c1634401424dd71a1}")
 print(data.status_code)
 
 
@@ -30,14 +30,14 @@ funnyMessage = random.choice(funnyMessagesList)
 
 @app.route("/")
 
-def hello_world():
+def weatherApp():
     context = {'temprature' : temp, 
                'funnyMessage' : funnyMessage,
                'feelsLike' : feelsLike,
                'humidity' : humidity,
                'chanceOfRain' : chanceOfRain,
                'windSpeed' : windSpeed}
-    return render_template('hello.html', **context)
+    return render_template('home.html', **context)
 
 @app.route("/about")
 
