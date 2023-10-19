@@ -6,12 +6,18 @@ try:
     import csv
     import pygame
     import requests
+    import json
 except:
     print('')
     
     
-data = requests.get("https://api.openweathermap.org/data/2.5/weather?lat={42.82642299955682}&lon={-71.57923160207767}&appid={15dfa1324b44123c1634401424dd71a1}")
-print(data.status_code)    
+apiCall = requests.get('https://api.openweathermap.org/data/2.5/weather?lat=42.82642299955682&lon=-71.57923160207767&units=imperial&appid=15dfa1324b44123c1634401424dd71a1')
+print('code:', apiCall.status_code)
+apiJson = apiCall.text
+data = json.loads(apiJson)
+
+print(data["main"]['temp'])
+
     
 '''
 numm = input('pick a number\n')

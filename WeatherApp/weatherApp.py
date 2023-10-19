@@ -3,19 +3,19 @@ from flask import render_template
 from jinja2 import Template
 import random
 import requests
+import json
 app = Flask(__name__)
 
 #Lat and long
 #42.82642299955682, -71.57923160207767
-data = requests.get("https://api.openweathermap.org/data/2.5/weather?lat=42.82642299955682&lon=-71.57923160207767&appid={15dfa1324b44123c1634401424dd71a1}")
-print(data.status_code)
+apiCall = requests.get('https://api.openweathermap.org/data/2.5/weather?lat=42.82642299955682&lon=-71.57923160207767&units=imperial&appid=15dfa1324b44123c1634401424dd71a1')
+apiText = apiCall.text
+apiData = json.loads(apiText)
 
-
-temp = 52
-feelsLike = 52
-humidity = 80
-chanceOfRain = 0
-windSpeed = 2
+temp = apiData['main']['temp']
+feelsLike = apiData['main']['feels_like']
+humidity = apiData['main']['humidity']
+windSpeed = apiData['wind']['speed']
 funnyMessagesList = ["copyright: me :3", 
                      "RIP: dark sky",
                      "google weather stole our idea, trust",
@@ -35,7 +35,6 @@ def weatherApp():
                'funnyMessage' : funnyMessage,
                'feelsLike' : feelsLike,
                'humidity' : humidity,
-               'chanceOfRain' : chanceOfRain,
                'windSpeed' : windSpeed}
     return render_template('home.html', **context)
 
