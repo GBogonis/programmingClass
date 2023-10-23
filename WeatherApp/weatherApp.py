@@ -13,6 +13,7 @@ apiText = apiCall.text
 apiData = json.loads(apiText)
 
 temp = apiData['main']['temp']
+description = apiData['weather'][0]['description']
 feelsLike = apiData['main']['feels_like']
 humidity = apiData['main']['humidity']
 windSpeed = apiData['wind']['speed']
@@ -20,7 +21,7 @@ funnyMessagesList = ["copyright: me :3",
                      "RIP: dark sky",
                      "google weather stole our idea, trust",
                      "the real weather app was the friends we made along the way",
-                     "WARNING: must be a silly goose to inter :3",
+                     "WARNING: must be a silly goose to enter :3",
                      '"it is not a skill issue, it is a skill solution"',
                      "It's joever",
                      '"from the desk of Dr.Copenheimer"']
@@ -32,6 +33,7 @@ funnyMessage = random.choice(funnyMessagesList)
 
 def weatherApp():
     context = {'temprature' : temp, 
+               'description' : description,
                'funnyMessage' : funnyMessage,
                'feelsLike' : feelsLike,
                'humidity' : humidity,

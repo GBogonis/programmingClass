@@ -16,7 +16,10 @@ print('code:', apiCall.status_code)
 apiJson = apiCall.text
 data = json.loads(apiJson)
 
-print(data["main"]['temp'])
+print(data['weather'][0]['description'])
+
+print(data)
+
 
     
 '''
