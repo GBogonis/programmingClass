@@ -82,15 +82,16 @@ footer {
 <section>
   <nav>
     <ul>
-      <li><a href="http://127.0.0.1:5000">Today's weather</a></li>
+      <li><a href="http://127.0.0.1:5000">submition page</a></li>
+      <li><a href="http://127.0.0.1:5000/weatherApp/">Today's weather</a></li>
       <li><a href="http://127.0.0.1:5000/machineLearning">Machine predition</a></li>
       <li><a href="http://127.0.0.1:5000/about">About</a></li>
     </ul>
   </nav>
   
   <article>
-    <h1>Todays weather:</h1>
-    <p>Today has {{ description }} with a temp of about {{ temprature }}&deg;</p>
+    <h1>Todays weather in {{ cityName }}:</h1>
+    <p>Today has {{ description }} with a temp of about {{ temperature }}&deg;</p>
     <p>Feels like {{ feelsLike }}&deg;</p>
     <p>The humidity is about {{ humidity }}%</p>
     <p>The wind speed is {{ windSpeed }} miles per hour</p>

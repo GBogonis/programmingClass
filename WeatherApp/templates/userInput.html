@@ -82,7 +82,8 @@ footer {
 <section>
   <nav>
     <ul>
-      <li><a href="http://127.0.0.1:5000">Today's weather</a></li>
+      <li><a href="http://127.0.0.1:5000">submition page</a></li>
+      <li><a href="http://127.0.0.1:5000/weatherApp/">Today's weather</a></li>
       <li><a href="http://127.0.0.1:5000/machineLearning">Machine predition</a></li>
       <li><a href="http://127.0.0.1:5000/about">About</a></li>
     </ul>
@@ -90,10 +91,10 @@ footer {
   
   <article>
     <h1>Location:</h1>
-    <form action="/data" method = "POST">
-        <p>latitude <input type = "number" name = "Name" /></p>
-        <p>longitude <input type = "number" name = "City" /></p>
-        <p><input type = "submit" value = "Submit" /></p>
+    <form action="/weatherApp" method = "POST">
+        <p>latitude <input type = "number" step = "any" name = "latitude" /></p>
+        <p>longitude <input type = "number" step = "any" name = "longitude" /></p>
+        <p><input type = "submit" value = "See weather" /></p>
     </form>
   </article>
 </section>

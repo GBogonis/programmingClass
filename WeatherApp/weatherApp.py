@@ -6,19 +6,7 @@ import requests
 import json
 app = Flask(__name__)
 
-#Lat and long
-#42.82642299955682, -71.57923160207767
-apiCall = requests.get('https://api.openweathermap.org/data/2.5/weather?lat=42.82642299955682&lon=-71.57923160207767&units=imperial&appid=15dfa1324b44123c1634401424dd71a1')
-apiText = apiCall.text
-apiData = json.loads(apiText)
 
-temp = apiData['main']['temp']
-temp = round(temp)
-description = apiData['weather'][0]['description']
-feelsLike = apiData['main']['feels_like']
-feelsLike = round(feelsLike)
-humidity = apiData['main']['humidity']
-windSpeed = apiData['wind']['speed']
 funnyMessagesList = ["copyright: me :3", 
                      "RIP: dark sky",
                      "google weather stole our idea, trust",
@@ -26,12 +14,13 @@ funnyMessagesList = ["copyright: me :3",
                      "WARNING: must be a silly goose to enter :3",
                      '"it is not a skill issue, it is a skill solution"',
                      "It's joever",
-                     '"from the desk of Dr.Copenheimer"']
+                     '"from the desk of Dr.Copenheimer"',
+                     "the temperature has fallen, Billions must freeze"]
 
 funnyMessage = random.choice(funnyMessagesList)
 
 
-@app.route("/userinput")
+@app.route("/")
 
 def userInput():
     context = {'funnyMessage' : funnyMessage}
@@ -40,15 +29,36 @@ def userInput():
 @app.route("/weatherApp/", methods = ['POST', 'GET'])
 def weatherApp():   
     
-    context = {'temprature' : temp, 
+    if request.method == 'GET':
+        return render_template('error.html')
+    if request.method == 'POST':
+        form_data = request.form
+        lat = form_data["latitude"]
+        lon = form_data["longitude"]
+        #Lat and long
+        #42.82642299955682, -71.57923160207767
+        #api call
+        apiCall = requests.get('https://api.openweathermap.org/data/2.5/weather?lat='+lat+'&lon='+lon+'&units=imperial&appid=15dfa1324b44123c1634401424dd71a1')
+        apiText = apiCall.text
+        apiData = json.loads(apiText)
+
+        #data
+        name = apiData['name']
+        temp = apiData['main']['temp']
+        temp = round(temp)
+        description = apiData['weather'][0]['description']
+        feelsLike = apiData['main']['feels_like']
+        feelsLike = round(feelsLike)
+        humidity = apiData['main']['humidity']
+        windSpeed = apiData['wind']['speed']
+        #context
+        context = {'temperature' : temp, 
                'description' : description,
                'funnyMessage' : funnyMessage,
                'feelsLike' : feelsLike,
                'humidity' : humidity,
-               'windSpeed' : windSpeed}
-    if request.method == 'GET':
-        return render_template('error.html')
-    if request.method == 'POST':
+               'windSpeed' : windSpeed,
+               'cityName' : name}
         
     return render_template('home.html', **context)
 
