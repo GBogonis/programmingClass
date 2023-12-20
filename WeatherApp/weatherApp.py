@@ -1,6 +1,5 @@
 from flask import Flask, render_template, request
 from jinja2 import Template
-#from textblob import TextBlob
 import random
 import requests
 import json
