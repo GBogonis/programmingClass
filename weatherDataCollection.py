@@ -6,11 +6,11 @@ output = open("weatherData3.txt","w")
 
 #apiCall = requests.get('https://api.openweathermap.org/data/2.5/weather?lat=42.82642299955682&lon=-71.57923160207767&units=imperial&appid=15dfa1324b44123c1634401424dd71a1')
 #apiCall = requests.get('https://api.openweathermap.org/data/3.0/onecall/timemachine?lat=42.82642299955682&lon=-71.57923160207767&dt=1668970400&appid=15dfa1324b44123c1634401424dd71a1')
-year = 1982
+year = 2022
 
 #startYear = 1982
 endYear= 2023
-day = '01'
+day = '10'
 month = '01'
 #dataList = []
 
