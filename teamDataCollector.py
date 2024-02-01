@@ -16,4 +16,4 @@ for i in range(2023,2001,-1):
         numTie += data['full_ties']
         numTotal += data['full_count']
 
-print(numWin/numTotal)
+print(numWin/(numTotal-numTie))
