@@ -26,6 +26,8 @@ class team:
         self.total += gamesTotal
         
     def getWinRate(self):
+        if(self.total == 0):
+            return 0
         return (self.wins/(self.total-self.tie))
     
     def getRookieYear(self):
@@ -33,11 +35,13 @@ class team:
             return mStatbotics.get_team(int(self.number))['rookie_year']
         except:
             return "no rookie year"
-        
-        
+
+
 
 teamsFile = open("teams.txt")
 teams = []
+
+
 for i in teamsFile:
     teams.append(team(i))
 
@@ -60,4 +64,5 @@ for i in range(2023,2001,-1):
                 continue
 
 for i in teams:
-    print(i.number, " has a winrate of ", i.getWinRate())
+    
+    print(str(i.number) + " has a winrate of " + str(i.getWinRate()))
