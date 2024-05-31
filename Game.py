@@ -22,9 +22,10 @@ class player:
     def turn(self,listOfEnemies):
         while True:
             for i in range(0,len(listOfEnemies),1):
-                print("there is a " + listOfEnemies[i].type + "in position " + str(i))
+                print("there is a " + listOfEnemies[i].type + " in position " + str(i+1))
             target = input("Which position do you want to attack?")
-            if(int(target) <= len(listOfEnemies)):
+            target = int(target)
+            if(target <= len(listOfEnemies)):
                 break
         
         self.dps = -5 + swords[self.sword]
@@ -95,15 +96,10 @@ while cavelayer != 0:
         print("you are on floor: " + str(cavelayer) + " and you are confronted by a enemy, a " + enemyList[0].type)
 
     while(len(enemyList) != 0):
-        playerMove = mPlayer.turn()
-        mController.turn(playerMove[0], playerMove[1])
+        playerMove = mPlayer.turn(enemyList)
+        print("player move: ", playerMove)
+        mController.turn(playerMove)
     
     cavelayer += 1
 
 print("you have escaped the cave, congratulations!")
-    
-
-
-
-
-    
