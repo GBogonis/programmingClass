@@ -21,8 +21,8 @@ class player:
 
     def turn(self,listOfEnemies):
         while True:
-            for i in range(len(listOfEnemies)):
-                print("there is a " + listOfEnemies[i-1].type + "in position " + str(i))
+            for i in range(0,len(listOfEnemies),1):
+                print("there is a " + listOfEnemies[i].type + "in position " + str(i))
             target = input("Which position do you want to attack?")
             if(int(target) <= len(listOfEnemies)):
                 break
@@ -42,8 +42,22 @@ class controller:
     def __init__(self):
         self.turn = 1
 
+    def turn(self, playerDPS, playerTarget):
+        print("you attacked a " + str(enemyList[playerTarget].type) + " for " + str(playerDPS) + " damage!")
+        enemyList[playerTarget].health += playerDPS
+        for i in enemyList:
+            if(i.health > 0):
+                mPlayer.health += i.damage
+                print("you were hit by a " + str(i.type) + " for " + str(i.damage) + " damage!")
+            else:
+                enemyList.remove(i)
+        print("you are now at " + str(mPlayer.health) + " HP")
+        self.turn += 1
+
 enemyList = []
 mPlayer = player()
+mController = controller()
+
 #game loop
 while True:
     start = input("start game? [Y or N]")
@@ -80,7 +94,13 @@ while cavelayer != 0:
     else:
         print("you are on floor: " + str(cavelayer) + " and you are confronted by a enemy, a " + enemyList[0].type)
 
+    while(len(enemyList) != 0):
+        playerMove = mPlayer.turn()
+        mController.turn(playerMove[0], playerMove[1])
     
+    cavelayer += 1
+
+print("you have escaped the cave, congratulations!")
     
 
 
