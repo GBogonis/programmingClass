@@ -7,7 +7,7 @@ magics = {"fireball": -20, "healing prayer": 30, "great fireball": -50, "great h
 #(damage, number of turns)
 status = {"poison": (-5,5), "fire": (-10,3)}
 #enemy values
-enemyDamage = {"slime": -10, "goblin": -20, "orc": -30}
+enemyDamage = {"slime": -15, "goblin": -25, "orc": -35}
 enemyHealth = {"slime":20, "goblin": 40, "orc": 50}
 
 cavelayer = 10
@@ -21,12 +21,15 @@ class player:
 
     def turn(self,listOfEnemies):
         while True:
-            for i in range(0,len(listOfEnemies),1):
-                print("there is a " + listOfEnemies[i].type + " in position " + str(i+1))
-            target = input("Which position do you want to attack?")
-            target = int(target)
-            if(target <= len(listOfEnemies)):
-                break
+            try:
+                for i in range(0,len(listOfEnemies),1):
+                    print("there is a " + listOfEnemies[i].type + " in position " + str(i+1))
+                target = input("Which position do you want to attack?")
+                target = int(target)
+                if(target <= len(listOfEnemies)):
+                    break
+            except:
+                print("intput not recognized, try again")
         
         self.dps = -5 + swords[self.sword]
         return (self.dps, target)
@@ -44,23 +47,26 @@ class controller:
         self.turns = 1
 
     def turn(self, playerDPS, playerTarget, playerResist):
-        print("you attacked a " + str(enemyList[playerTarget-1].type) + " for " + str(playerDPS) + " damage!")
-        enemyList[playerTarget-1].health += playerDPS
-        if(enemyList[playerTarget-1].health > 0):
-            print("The ", enemyList[playerTarget-1].type, " is left with ", enemyList[playerTarget-1].health, " HP!")
-        else:
-            print("you have slain the ", enemyList[playerTarget-1].type)
+        if(mPlayer.health > 0):
+            if((enemyList[playerTarget-1].health + playerDPS) > 0):
+                print("you attacked a " + str(enemyList[playerTarget-1].type) + " for " + str(-playerDPS) + " damage, it has ", (enemyList[playerTarget-1].health + playerDPS), " HP left!")
+            else:
+                print("you attacked a " + str(enemyList[playerTarget-1].type) + " for " + str(-playerDPS) + " damage")
+            enemyList[playerTarget-1].health += playerDPS
+            if(enemyList[playerTarget-1].health <= 0):
+                print("you have slain the ", enemyList[playerTarget-1].type)
 
         for i in enemyList:
             if(i.health > 0):
-
+                if(mPlayer.health <=0):
+                    break
                 mPlayer.health += (i.damage + playerResist)
-                print("you were hit by a " + str(i.type) + " for " + str(i.damage) + " damage!")
+                print("you were hit by a " + str(i.type) + " for " + str(-(i.damage)) + " damage!" + " you are now at " + str(mPlayer.health) + " HP")
+                if(mPlayer.health <=0):
+                    break
             else:
                 enemyList.remove(i)
-        print("you are now at " + str(mPlayer.health) + " HP")
         self.turns += 1
-
 enemyList = []
 mPlayer = player()
 mController = controller()
@@ -88,7 +94,7 @@ while cavelayer != 0:
     
     for i in range(numOfEnemy):
         enemyDifficulty = random.randint(1,10)
-        if(enemyDifficulty > cavelayer+4):
+        if(enemyDifficulty > cavelayer+5):
             enemyList.append(enemy("orc"))
         elif(enemyDifficulty > cavelayer):
             enemyList.append(enemy("goblin"))
@@ -104,7 +110,10 @@ while cavelayer != 0:
     while(len(enemyList) != 0):
         playerMove = mPlayer.turn(enemyList)
         mController.turn(playerMove[0],playerMove[1], armors[mPlayer.armor])
-    
+        if(mPlayer.health <=0):
+            break
+    if(mPlayer.health <=0):
+        break
     floorMessage = random.randint(1,5)
     if(floorMessage == 1):
         print("floor complete! you might make it out of this alive")
@@ -121,13 +130,13 @@ while cavelayer != 0:
         print("you rest for a bit and scavange the battlefield")
         mPlayer.health = 100
         lootSword = random.randint(1,10)
-        if(lootSword > cavelayer+5):
+        if(lootSword > cavelayer+5 and mPlayer.sword != "titanium"):
             print("You find a titanium sword! it's heavy but you can deal")
             mPlayer.sword = "titanium"
-        elif(lootSword > cavelayer+3 and mPlayer.dps > -60):
+        elif(lootSword > cavelayer+2 and mPlayer.dps > -40):
             print("You find a iron sword! it's lighter than you expect but the handle has seen better days")
             mPlayer.sword = "iron"
-        elif(lootSword > cavelayer and mPlayer.dps > -40):
+        elif(lootSword > cavelayer and mPlayer.dps > -20):
             print("You find a bronze sword! part of the blade is chiped but it cuts fine")
             mPlayer.sword = "bronze"
         elif(mPlayer.dps > -10):
@@ -137,10 +146,10 @@ while cavelayer != 0:
             print("You couldn't find a better weapon")
 
         lootArmor = random.randint(1,10)
-        if(lootArmor > cavelayer+5):
+        if(lootArmor > cavelayer+5 and mPlayer.armor != "titanium"):
             print("You find titanium armor! you might as well be a real knight at this point")
             mPlayer.armor = "titanium"
-        elif(lootArmor > cavelayer+3 and armors[mPlayer.armor] < 15):
+        elif(lootArmor > cavelayer+2 and armors[mPlayer.armor] < 15):
             print("You find iron armor! you pretend you are a knight to feel better about the situation")
             mPlayer.armor = "iron"
         elif(lootArmor > cavelayer and armors[mPlayer.armor] < 10):
@@ -152,7 +161,8 @@ while cavelayer != 0:
         else:
             print("You couldn't find any better protection")
     cavelayer -= 1
-
-print("you have escaped the cave, congratulations!")
+if(mPlayer.health <=0):
+    print("not everyone makes it out alive...")
+else:
+    print("you have escaped the cave, congratulations!")
 print("thank you for playing")
-exit()
