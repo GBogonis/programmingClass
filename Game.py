@@ -1,27 +1,28 @@
 import random
 #start
-
 armors = {"none":0, "leather":5, "bronze":10, "iron":15, "titanium":20}
 swords = {"none":0, "wood":-10, "bronze":-20, "iron":-40, "titanium":-60}
-magics = {"fireball": -20, "healing prayer": 30, "great fireball": -50, "great healing preyer": 60}
-#(damage, number of turns)
-status = {"poison": (-5,5), "fire": (-10,3)}
 #enemy values
 enemyDamage = {"slime": -15, "goblin": -25, "orc": -35}
 enemyHealth = {"slime":20, "goblin": 40, "orc": 50}
 
+#keeps track of game progress, and affects difficulty
 cavelayer = 10
+
+#player class to manage player state and calculate the players actions
 class player:
     def __init__(self):
+        #base stats
         self.health = 100
         self.armor = "none"
         self.sword = "none"
         self.dps = -5
-        self.resist = 0
 
     def turn(self,listOfEnemies):
+        #turn code is inside a loop to ensure the user input is viable
         while True:
             try:
+                #simple code for "you are being attacked, what do you do?"
                 for i in range(0,len(listOfEnemies),1):
                     print("there is a " + listOfEnemies[i].type + " in position " + str(i+1))
                 target = input("Which position do you want to attack?")
@@ -30,7 +31,7 @@ class player:
                     break
             except:
                 print("intput not recognized, try again")
-        
+        #returns values that the controller class takes as a argument to calculate what happens in a turn
         self.dps = -5 + swords[self.sword]
         return (self.dps, target)
 
@@ -47,26 +48,28 @@ class controller:
         self.turns = 1
 
     def turn(self, playerDPS, playerTarget, playerResist):
+        #takes the players actions and makes the game happen
         if(mPlayer.health > 0):
+            #logic to make wording better
             if((enemyList[playerTarget-1].health + playerDPS) > 0):
                 print("you attacked a " + str(enemyList[playerTarget-1].type) + " for " + str(-playerDPS) + " damage, it has ", (enemyList[playerTarget-1].health + playerDPS), " HP left!")
             else:
                 print("you attacked a " + str(enemyList[playerTarget-1].type) + " for " + str(-playerDPS) + " damage")
+            #where the enemies take damage
             enemyList[playerTarget-1].health += playerDPS
             if(enemyList[playerTarget-1].health <= 0):
                 print("you have slain the ", enemyList[playerTarget-1].type)
-
-        for i in enemyList:
-            if(i.health > 0):
-                if(mPlayer.health <=0):
-                    break
-                mPlayer.health += (i.damage + playerResist)
-                print("you were hit by a " + str(i.type) + " for " + str(-(i.damage)) + " damage!" + " you are now at " + str(mPlayer.health) + " HP")
-                if(mPlayer.health <=0):
-                    break
-            else:
-                enemyList.remove(i)
+            #where you take damage
+            for i in enemyList:
+                if(i.health > 0):
+                    mPlayer.health += (i.damage + playerResist)
+                    print("you were hit by a " + str(i.type) + " for " + str(-(i.damage)) + " damage!" + " you are now at " + str(mPlayer.health) + " HP")
+                else:
+                    enemyList.remove(i)
+        #turns varible that we display at the end
         self.turns += 1
+
+#game instance setup
 enemyList = []
 mPlayer = player()
 mController = controller()
@@ -82,8 +85,9 @@ while True:
     else:
         print("input not recognized: try again \n")
 
+#where the magic happens
 while cavelayer != 0:
-    #encounter:
+    #encounter setup:
     difficulty = random.randint(1,10)
     if(difficulty > cavelayer):
         numOfEnemy = 3
@@ -107,13 +111,19 @@ while cavelayer != 0:
     else:
         print("you are on floor: " + str(cavelayer) + " and you are confronted by a enemy, a " + enemyList[0].type)
 
+    #encounter gameplay:
     while(len(enemyList) != 0):
+        #while there are enemies to fight, fight!
         playerMove = mPlayer.turn(enemyList)
         mController.turn(playerMove[0],playerMove[1], armors[mPlayer.armor])
+        #we need two breaks for both loops in the event of a game over.
         if(mPlayer.health <=0):
             break
     if(mPlayer.health <=0):
         break
+    #the battle is over, take a rest
+
+    #funny messages
     floorMessage = random.randint(1,5)
     if(floorMessage == 1):
         print("floor complete! you might make it out of this alive")
@@ -126,9 +136,14 @@ while cavelayer != 0:
     elif(floorMessage == 5):
         print("floor complete! if you make it out of here, you wonder who you will tell about this")
 
+    #loot time, drop rarity is calculated by cave layer, similar to enemy difficulty
+    #this if is to make the ending of the game smoother, we don't need loot if we beat the game
     if(cavelayer != 1):
         print("you rest for a bit and scavange the battlefield")
+        #health reset
         mPlayer.health = 100
+
+        #sword drops 
         lootSword = random.randint(1,10)
         if(lootSword > cavelayer+5 and mPlayer.sword != "titanium"):
             print("You find a titanium sword! it's heavy but you can deal")
@@ -145,6 +160,7 @@ while cavelayer != 0:
         else:
             print("You couldn't find a better weapon")
 
+        #armor drops
         lootArmor = random.randint(1,10)
         if(lootArmor > cavelayer+5 and mPlayer.armor != "titanium"):
             print("You find titanium armor! you might as well be a real knight at this point")
@@ -160,9 +176,15 @@ while cavelayer != 0:
             mPlayer.armor = "leather"
         else:
             print("You couldn't find any better protection")
+    #we're moving up in the world
     cavelayer -= 1
+
+#if we got to this part, you either beat the game or died trying 
 if(mPlayer.health <=0):
     print("not everyone makes it out alive...")
+    print("GAME OVER, You survived " , str(mController.turns), " turns.")
 else:
     print("you have escaped the cave, congratulations!")
+    print("GAME WIN, You made it out in ", str(mController.turns), " turns.")
+
 print("thank you for playing")
