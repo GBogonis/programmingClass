@@ -35,6 +35,13 @@ class player:
         self.dps = -5 + swords[self.sword]
         return (self.dps, target)
 
+    #if the game is replayed, we need to reset all the things
+    def reset(self):
+        self.health = 100
+        self.armor = "none"
+        self.sword = "none"
+        self.dps = -5
+
 class enemy:
     def __init__(self, type):
         self.health = enemyHealth[type]
@@ -79,112 +86,128 @@ while True:
     start = input("start game? [Y or N]")
     if(start == "N" or start == "n"):
         exit()
-    elif(start == "Y" or "y"):
+    elif(start == "Y" or start == "y"):
         print("You wake up in a cave, and you decide the only reasonable course of action is to indulge your sense of adventrue and escape this cave! \n")
         break
     else:
         print("input not recognized: try again \n")
-
-#where the magic happens
-while cavelayer != 0:
-    #encounter setup:
-    difficulty = random.randint(1,10)
-    if(difficulty > cavelayer):
-        numOfEnemy = 3
-    elif(difficulty > cavelayer+2):
-        numOfEnemy = 2
-    else:
-        numOfEnemy = 1
-    
-    for i in range(numOfEnemy):
-        enemyDifficulty = random.randint(1,10)
-        if(enemyDifficulty > cavelayer+5):
-            enemyList.append(enemy("orc"))
-        elif(enemyDifficulty > cavelayer):
-            enemyList.append(enemy("goblin"))
+while True:
+    #keeps track of game progress, and affects difficulty
+    cavelayer = 10
+    #where the magic happens
+    while cavelayer != 0:
+        #encounter setup:
+        difficulty = random.randint(1,10)
+        if(difficulty > cavelayer):
+            numOfEnemy = 3
+        elif(difficulty > cavelayer+2):
+            numOfEnemy = 2
         else:
-            enemyList.append(enemy("slime"))
-    if(numOfEnemy == 3):
-        print("you are on floor: " + str(cavelayer) + " and you are confronted by three enemies, a " + enemyList[0].type + ", a " + enemyList[1].type + ", and a " + enemyList[2].type)
-    elif(numOfEnemy == 2):   
-        print("you are on floor: " + str(cavelayer) + " and you are confronted by two enemies, a " + enemyList[0].type + ", and a " + enemyList[1].type)
-    else:
-        print("you are on floor: " + str(cavelayer) + " and you are confronted by a enemy, a " + enemyList[0].type)
+            numOfEnemy = 1
+        
+        for i in range(numOfEnemy):
+            enemyDifficulty = random.randint(1,10)
+            if(enemyDifficulty > cavelayer+5):
+                enemyList.append(enemy("orc"))
+            elif(enemyDifficulty > cavelayer):
+                enemyList.append(enemy("goblin"))
+            else:
+                enemyList.append(enemy("slime"))
+        if(numOfEnemy == 3):
+            print("you are on floor: " + str(cavelayer) + " and you are confronted by three enemies, a " + enemyList[0].type + ", a " + enemyList[1].type + ", and a " + enemyList[2].type)
+        elif(numOfEnemy == 2):   
+            print("you are on floor: " + str(cavelayer) + " and you are confronted by two enemies, a " + enemyList[0].type + ", and a " + enemyList[1].type)
+        else:
+            print("you are on floor: " + str(cavelayer) + " and you are confronted by a enemy, a " + enemyList[0].type)
 
-    #encounter gameplay:
-    while(len(enemyList) != 0):
-        #while there are enemies to fight, fight!
-        playerMove = mPlayer.turn(enemyList)
-        mController.turn(playerMove[0],playerMove[1], armors[mPlayer.armor])
-        #we need two breaks for both loops in the event of a game over.
+        #encounter gameplay:
+        while(len(enemyList) != 0):
+            #while there are enemies to fight, fight!
+            playerMove = mPlayer.turn(enemyList)
+            mController.turn(playerMove[0],playerMove[1], armors[mPlayer.armor])
+            #we need two breaks for both loops in the event of a game over.
+            if(mPlayer.health <=0):
+                break
         if(mPlayer.health <=0):
             break
+        #the battle is over, take a rest
+
+        #funny messages
+        floorMessage = random.randint(1,5)
+        if(floorMessage == 1):
+            print("floor complete! you might make it out of this alive")
+        elif(floorMessage == 2):
+            print("floor complete! you start to feel like a true hero")
+        elif(floorMessage == 3):
+            print("floor complete! if you knew magic this would be a lot easier")
+        elif(floorMessage == 4):
+            print("floor complete! you are suprised at your own capability")
+        elif(floorMessage == 5):
+            print("floor complete! if you make it out of here, you wonder who you will tell about this")
+
+        #loot time, drop rarity is calculated by cave layer, similar to enemy difficulty
+        #this if is to make the ending of the game smoother, we don't need loot if we beat the game
+        if(cavelayer != 1):
+            print("you rest for a bit and scavange the battlefield")
+            #health reset
+            mPlayer.health = 100
+
+            #sword drops 
+            lootSword = random.randint(1,10)
+            if(lootSword > cavelayer+5 and mPlayer.sword != "titanium"):
+                print("You find a titanium sword! it's heavy but you can deal")
+                mPlayer.sword = "titanium"
+            elif(lootSword > cavelayer+2 and mPlayer.dps > -40):
+                print("You find a iron sword! it's lighter than you expect but the handle has seen better days")
+                mPlayer.sword = "iron"
+            elif(lootSword > cavelayer and mPlayer.dps > -20):
+                print("You find a bronze sword! part of the blade is chiped but it cuts fine")
+                mPlayer.sword = "bronze"
+            elif(mPlayer.dps > -10):
+                print("You find a wood sword! it isn't great but it better than nothing")
+                mPlayer.sword = "wood"
+            else:
+                print("You couldn't find a better weapon")
+
+            #armor drops
+            lootArmor = random.randint(1,10)
+            if(lootArmor > cavelayer+5 and mPlayer.armor != "titanium"):
+                print("You find titanium armor! you might as well be a real knight at this point")
+                mPlayer.armor = "titanium"
+            elif(lootArmor > cavelayer+2 and armors[mPlayer.armor] < 15):
+                print("You find iron armor! you pretend you are a knight to feel better about the situation")
+                mPlayer.armor = "iron"
+            elif(lootArmor > cavelayer and armors[mPlayer.armor] < 10):
+                print("You find bronze armor! you wonder if the Ancient Greeks were the last ones here")
+                mPlayer.armor = "bronze"
+            elif(mPlayer.dps > -10):
+                print("You find leather armor! you don't know what animal's leather but that doesn't matter now")
+                mPlayer.armor = "leather"
+            else:
+                print("You couldn't find any better protection")
+
+            print("you move to the next level with ", mPlayer.armor, " armor, and a ", mPlayer.sword, " sword, you now have ", str(armors[mPlayer.armor]), " armor points, and ", str(swords[mPlayer.sword]), " damage!")
+        #we're moving up in the world
+        cavelayer -= 1
+
+    #if we got to this part, you either beat the game or died trying 
     if(mPlayer.health <=0):
+        print("not everyone makes it out alive...")
+        print("GAME OVER, You survived " , str(mController.turns), " turns.")
+    else:
+        print("you have escaped the cave, congratulations!")
+        print("GAME WIN, You made it out in ", str(mController.turns), " turns.")
+    #play again?
+    replay = input("play again? [Y or N]")
+    if(replay == "N" or replay == "n"):
+        print("breaking")
         break
-    #the battle is over, take a rest
-
-    #funny messages
-    floorMessage = random.randint(1,5)
-    if(floorMessage == 1):
-        print("floor complete! you might make it out of this alive")
-    elif(floorMessage == 2):
-        print("floor complete! you start to feel like a true hero")
-    elif(floorMessage == 3):
-        print("floor complete! if you knew magic this would be a lot easier")
-    elif(floorMessage == 4):
-        print("floor complete! you are suprised at your own capability")
-    elif(floorMessage == 5):
-        print("floor complete! if you make it out of here, you wonder who you will tell about this")
-
-    #loot time, drop rarity is calculated by cave layer, similar to enemy difficulty
-    #this if is to make the ending of the game smoother, we don't need loot if we beat the game
-    if(cavelayer != 1):
-        print("you rest for a bit and scavange the battlefield")
-        #health reset
-        mPlayer.health = 100
-
-        #sword drops 
-        lootSword = random.randint(1,10)
-        if(lootSword > cavelayer+5 and mPlayer.sword != "titanium"):
-            print("You find a titanium sword! it's heavy but you can deal")
-            mPlayer.sword = "titanium"
-        elif(lootSword > cavelayer+2 and mPlayer.dps > -40):
-            print("You find a iron sword! it's lighter than you expect but the handle has seen better days")
-            mPlayer.sword = "iron"
-        elif(lootSword > cavelayer and mPlayer.dps > -20):
-            print("You find a bronze sword! part of the blade is chiped but it cuts fine")
-            mPlayer.sword = "bronze"
-        elif(mPlayer.dps > -10):
-            print("You find a wood sword! it isn't great but it better than nothing")
-            mPlayer.sword = "wood"
-        else:
-            print("You couldn't find a better weapon")
-
-        #armor drops
-        lootArmor = random.randint(1,10)
-        if(lootArmor > cavelayer+5 and mPlayer.armor != "titanium"):
-            print("You find titanium armor! you might as well be a real knight at this point")
-            mPlayer.armor = "titanium"
-        elif(lootArmor > cavelayer+2 and armors[mPlayer.armor] < 15):
-            print("You find iron armor! you pretend you are a knight to feel better about the situation")
-            mPlayer.armor = "iron"
-        elif(lootArmor > cavelayer and armors[mPlayer.armor] < 10):
-            print("You find bronze armor! you wonder if the Ancient Greeks were the last ones here")
-            mPlayer.armor = "bronze"
-        elif(mPlayer.dps > -10):
-            print("You find leather armor! you don't know what animal's leather but that doesn't matter now")
-            mPlayer.armor = "leather"
-        else:
-            print("You couldn't find any better protection")
-    #we're moving up in the world
-    cavelayer -= 1
-
-#if we got to this part, you either beat the game or died trying 
-if(mPlayer.health <=0):
-    print("not everyone makes it out alive...")
-    print("GAME OVER, You survived " , str(mController.turns), " turns.")
-else:
-    print("you have escaped the cave, congratulations!")
-    print("GAME WIN, You made it out in ", str(mController.turns), " turns.")
-
+    elif(replay == "Y" or replay == "y"):
+        print("resetting world\n")
+        mPlayer.reset()
+        enemyList.clear()
+    else:
+        print("Ill take that as a no\n")
+        break
+    print("end of loop")
 print("thank you for playing")
